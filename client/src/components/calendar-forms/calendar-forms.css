@@ -1,0 +1,156 @@
+.calendar-form-ui {
+	box-sizing: border-box;
+	width: 680px;
+	max-width: min(100%, calc(100vw - 32px));
+	padding: 28px;
+	background: #fff;
+	color: #222925;
+	font:
+		14px / 1.6 -apple-system,
+		BlinkMacSystemFont,
+		"Segoe UI",
+		"Noto Sans JP",
+		sans-serif;
+	text-align: left;
+}
+
+.calendar-form-ui *,
+.calendar-form-ui *::before,
+.calendar-form-ui *::after {
+	box-sizing: border-box;
+}
+
+.calendar-form-ui h1 {
+	margin: 0 0 28px;
+	font-size: 24px;
+	font-weight: 650;
+	line-height: 1.4;
+	letter-spacing: 0;
+}
+
+.calendar-form-ui h2 {
+	margin: 0 0 16px;
+	font-size: 15px;
+	line-height: 1.6;
+	font-weight: 600;
+}
+
+.calendar-form-ui label {
+	display: block;
+	margin-bottom: 6px;
+	font-weight: 600;
+}
+
+.calendar-form-ui input,
+.calendar-form-ui textarea {
+	display: block;
+	width: 100%;
+	margin: 0 0 20px;
+	padding: 9px 11px;
+	border: 1px solid #a5aea8;
+	border-radius: 0;
+	background: #fff;
+	color: inherit;
+	font: inherit;
+}
+
+.calendar-form-ui textarea {
+	resize: vertical;
+}
+
+.calendar-form-ui button {
+	min-height: 40px;
+	padding: 8px 16px;
+	border: 1px solid #a5aea8;
+	border-radius: 0;
+	background: #fff;
+	color: inherit;
+	font: inherit;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.calendar-form-ui button:hover {
+	background: #f0f3f1;
+}
+
+.calendar-form-ui button:disabled {
+	opacity: 0.6;
+	cursor: wait;
+}
+
+.calendar-form-ui button.calendar-form-ui__primary {
+	border-color: #245d45;
+	background: #245d45;
+	color: #fff;
+}
+
+.calendar-form-ui button.calendar-form-ui__primary:hover {
+	background: #194732;
+}
+
+.calendar-form-ui :focus-visible {
+	outline: 2px solid #245d45;
+	outline-offset: 3px;
+}
+
+.calendar-form-ui__columns {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+}
+
+.calendar-form-ui__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.calendar-form-ui__providers {
+	display: grid;
+	gap: 12px;
+	max-width: 360px;
+}
+
+.calendar-form-ui__danger-zone {
+	margin-top: 32px;
+	padding-top: 24px;
+	border-top: 1px solid #dce1dd;
+}
+
+.calendar-form-ui__details {
+	margin: 0 0 28px;
+	border-top: 1px solid #dce1dd;
+}
+
+.calendar-form-ui__details > div {
+	display: grid;
+	grid-template-columns: 100px minmax(0, 1fr);
+	gap: 12px;
+	padding: 10px 0;
+	border-bottom: 1px solid #dce1dd;
+}
+
+.calendar-form-ui__details dt {
+	font-weight: 600;
+}
+
+.calendar-form-ui__details dd {
+	margin: 0;
+	overflow-wrap: anywhere;
+}
+
+.calendar-form-ui [role="status"] {
+	margin: 16px 0 0;
+	color: #245d45;
+}
+
+@media (max-width: 480px) {
+	.calendar-form-ui {
+		padding: 20px 16px;
+	}
+
+	.calendar-form-ui__columns {
+		gap: 12px;
+	}
+}
