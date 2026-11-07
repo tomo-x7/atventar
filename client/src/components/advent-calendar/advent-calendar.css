@@ -1,0 +1,220 @@
+.ac-root,
+.ac-sheet {
+	--ac-ink: #222a26;
+	--ac-muted: #626b65;
+	--ac-line: #d4d9d3;
+	--ac-accent: #245b42;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", sans-serif;
+	font-size: 14px;
+	line-height: 1.6;
+	color: var(--ac-ink);
+	background: #fff;
+	box-sizing: border-box;
+}
+.ac-root *,
+.ac-sheet * {
+	box-sizing: border-box;
+}
+.ac-root {
+	max-width: 1600px;
+	margin: 0 auto;
+	padding: 32px;
+}
+.ac-root button,
+.ac-sheet button {
+	font: inherit;
+	cursor: pointer;
+	border-radius: 0;
+}
+.ac-root :focus-visible,
+.ac-sheet :focus-visible {
+	outline: 2px solid var(--ac-accent);
+	outline-offset: 3px;
+}
+.ac-heading-top,
+.ac-details,
+.ac-toolbar,
+.ac-sheet-heading,
+.ac-day-top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+.ac-year {
+	font-size: 13px;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+}
+.ac-collection-heading {
+	border-top: 3px solid var(--ac-ink);
+	padding-top: 16px;
+}
+.ac-collection-heading h1 {
+	font-size: clamp(24px, 3vw, 36px);
+	line-height: 1.4;
+	letter-spacing: -0.03em;
+	margin: 20px 0 14px;
+	font-weight: 650;
+	overflow-wrap: anywhere;
+}
+.ac-details {
+	align-items: start;
+	flex-wrap: wrap;
+}
+.ac-details p {
+	margin: 0;
+	white-space: pre-wrap;
+	max-width: 850px;
+}
+.ac-details > span {
+	white-space: nowrap;
+}
+.ac-toolbar {
+	justify-content: start;
+	border-block: 1px solid var(--ac-line);
+	margin: 28px 0 24px;
+	padding: 12px 0;
+	flex-wrap: wrap;
+}
+.ac-toolbar > button {
+	margin-left: auto;
+}
+.ac-button {
+	border: 1px solid var(--ac-line);
+	background: white;
+	color: var(--ac-ink);
+	padding: 7px 12px;
+	min-height: 36px;
+}
+.ac-button:hover {
+	background: #eef2ee;
+}
+.ac-button-primary {
+	background: var(--ac-accent);
+	color: white;
+	border-color: var(--ac-accent);
+}
+.ac-button-primary:hover {
+	background: #193f2e;
+}
+.ac-sheets {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 560px), 1fr));
+	gap: 32px 24px;
+	align-items: start;
+}
+.ac-sheet {
+	min-width: 0;
+}
+.ac-sheet-heading {
+	margin-bottom: 10px;
+}
+.ac-sheet-heading h2 {
+	font-size: 17px;
+	margin: 0;
+	font-weight: 650;
+}
+.ac-sheet-heading > span {
+	font-variant-numeric: tabular-nums;
+}
+.ac-days {
+	display: grid;
+	grid-template-columns: repeat(5, minmax(0, 1fr));
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	border-top: 1px solid var(--ac-line);
+	border-left: 1px solid var(--ac-line);
+}
+.ac-day {
+	border-right: 1px solid var(--ac-line);
+	border-bottom: 1px solid var(--ac-line);
+	min-height: 142px;
+	padding: 10px;
+	overflow-wrap: anywhere;
+	background: #fafbf9;
+}
+.ac-day-filled {
+	background: white;
+}
+.ac-day[aria-current="date"] {
+	box-shadow: inset 0 3px var(--ac-accent);
+}
+.ac-day-top {
+	gap: 4px;
+	margin-bottom: 8px;
+	align-items: baseline;
+	flex-wrap: wrap;
+}
+.ac-day time {
+	font-size: 23px;
+	font-weight: 550;
+	line-height: 1.2;
+	font-variant-numeric: tabular-nums;
+}
+
+.ac-sheet .ac-text-button {
+	background: none;
+	border: 0;
+	padding: 2px 0;
+	color: var(--ac-accent);
+	text-decoration: underline;
+	font-size: 12px;
+}
+.ac-author {
+	font-size: 12px;
+	margin-bottom: 5px;
+	font-weight: 600;
+}
+.ac-article {
+	color: var(--ac-accent);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
+	font-size: 13px;
+	line-height: 1.5;
+}
+.ac-status {
+	color: var(--ac-muted);
+	font-size: 12px;
+}
+.ac-comment {
+	margin: 6px 0 0;
+	font-size: 12px;
+}
+.ac-sheet .ac-join {
+	background: none;
+	border: 0;
+	color: var(--ac-accent);
+	padding: 8px 0;
+	text-align: left;
+	font-size: 12px;
+}
+.ac-join:hover {
+	text-decoration: underline;
+}
+.ac-empty {
+	padding: 32px 0;
+	text-align: center;
+}
+@media (max-width: 600px) {
+	.ac-root {
+		padding: 20px 12px;
+	}
+	.ac-days {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+	.ac-day {
+		min-height: 116px;
+		padding: 8px;
+	}
+	.ac-heading-top {
+		flex-wrap: wrap;
+	}
+	.ac-toolbar {
+		gap: 8px 12px;
+	}
+	.ac-toolbar > button {
+		margin-left: 0;
+	}
+}

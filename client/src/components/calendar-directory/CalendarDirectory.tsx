@@ -1,0 +1,309 @@
+import { useId, useState } from 'react'
+import './calendar-directory.css'
+
+export interface CalendarSummary {
+	id: string
+	title: string
+	year: number
+	owner: string
+	participants: number
+	sheets: number
+	createdAt: string
+}
+
+export interface ArticleSummary {
+	id: string
+	title: string
+	calendarTitle: string
+	date: string
+	url: string
+}
+
+type CalendarSelect = (calendar: CalendarSummary) => void
+
+export function CalendarRows({
+	calendars,
+	onCalendarSelect,
+}: {
+	calendars: CalendarSummary[]
+	onCalendarSelect?: CalendarSelect
+}) {
+	return (
+		<div className="directory-table-scroll">
+			<table className="directory-table">
+				<thead>
+					<tr>
+						<th scope="col">カレンダー</th>
+						<th scope="col">年</th>
+						<th scope="col">主催</th>
+						<th scope="col">参加枠</th>
+						<th scope="col">枚数</th>
+					</tr>
+				</thead>
+				<tbody>
+					{calendars.map((calendar) => (
+						<tr key={calendar.id}>
+							<th scope="row">
+								{onCalendarSelect ? (
+									<button className="directory-title-button" type="button" onClick={() => onCalendarSelect(calendar)}>
+										{calendar.title}
+									</button>
+								) : (
+									calendar.title
+								)}
+							</th>
+							<td className="directory-numeric">{calendar.year}</td>
+							<td>{calendar.owner}</td>
+							<td className="directory-numeric">
+								{calendar.participants} / {calendar.sheets * 25}
+							</td>
+							<td className="directory-numeric">{calendar.sheets}</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
+	)
+}
+
+export function CalendarDirectory({
+	calendars,
+	initialYear = 2026,
+	pageSize = 8,
+	onCalendarSelect,
+	onCreate,
+}: {
+	calendars: CalendarSummary[]
+	initialYear?: number
+	pageSize?: number
+	onCalendarSelect?: CalendarSelect
+	onCreate?: () => void
+}) {
+	const id = useId()
+	const [year, setYear] = useState(initialYear)
+	const [query, setQuery] = useState('')
+	const [sort, setSort] = useState('newest')
+	const [openOnly, setOpenOnly] = useState(false)
+	const [visibleCount, setVisibleCount] = useState(Math.max(1, pageSize))
+	const years = [...new Set([initialYear, ...calendars.map((calendar) => calendar.year)])].sort((a, b) => b - a)
+	const matching = calendars
+		.filter(
+			(calendar) =>
+				calendar.year === year &&
+				`${calendar.title} ${calendar.owner}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()) &&
+				(!openOnly || calendar.participants < calendar.sheets * 25),
+		)
+		.sort((a, b) =>
+			sort === 'popular'
+				? b.participants - a.participants
+				: sort === 'title'
+					? a.title.localeCompare(b.title, 'ja')
+					: b.createdAt.localeCompare(a.createdAt),
+		)
+	function resetFilters() {
+		setQuery('')
+		setOpenOnly(false)
+		setSort('newest')
+		setVisibleCount(Math.max(1, pageSize))
+	}
+	return (
+		<section className="calendar-directory" aria-labelledby={`${id}-title`}>
+			<header className="directory-heading">
+				<h1 id={`${id}-title`}>カレンダー</h1>
+				{onCreate && (
+					<button className="directory-primary" type="button" onClick={onCreate}>
+						カレンダーを作る
+					</button>
+				)}
+			</header>
+			<div className="directory-filters">
+				<label htmlFor={`${id}-year`}>
+					年
+					<select
+						id={`${id}-year`}
+						value={year}
+						onChange={(event) => {
+							setYear(Number(event.target.value))
+							setVisibleCount(Math.max(1, pageSize))
+						}}
+					>
+						{years.map((value) => (
+							<option key={value} value={value}>
+								{value}
+							</option>
+						))}
+					</select>
+				</label>
+				<label className="directory-search" htmlFor={`${id}-search`}>
+					検索
+					<input
+						id={`${id}-search`}
+						type="search"
+						value={query}
+						onChange={(event) => {
+							setQuery(event.target.value)
+							setVisibleCount(Math.max(1, pageSize))
+						}}
+					/>
+				</label>
+				<label htmlFor={`${id}-sort`}>
+					並べ替え
+					<select
+						id={`${id}-sort`}
+						value={sort}
+						onChange={(event) => {
+							setSort(event.target.value)
+							setVisibleCount(Math.max(1, pageSize))
+						}}
+					>
+						<option value="newest">新着順</option>
+						<option value="popular">参加人数順</option>
+						<option value="title">名前順</option>
+					</select>
+				</label>
+				<label className="directory-check">
+					<input
+						type="checkbox"
+						checked={openOnly}
+						onChange={(event) => {
+							setOpenOnly(event.target.checked)
+							setVisibleCount(Math.max(1, pageSize))
+						}}
+					/>
+					募集中のみ
+				</label>
+			</div>
+			<output className="directory-result-count">{matching.length}件</output>
+			{matching.length ? (
+				<CalendarRows calendars={matching.slice(0, visibleCount)} onCalendarSelect={onCalendarSelect} />
+			) : (
+				<div className="directory-empty">
+					<p>該当するカレンダーがありません</p>
+					<button type="button" onClick={resetFilters}>
+						検索条件をクリア
+					</button>
+				</div>
+			)}
+			{visibleCount < matching.length && (
+				<button
+					className="directory-more"
+					type="button"
+					onClick={() => setVisibleCount((count) => count + Math.max(1, pageSize))}
+				>
+					もっと見る（残り{matching.length - visibleCount}件）
+				</button>
+			)}
+		</section>
+	)
+}
+
+export function UserCalendarPage({
+	name,
+	handle,
+	joined,
+	hosted,
+	articles,
+	onCalendarSelect,
+	onEditProfile,
+}: {
+	name: string
+	handle: string
+	joined: CalendarSummary[]
+	hosted: CalendarSummary[]
+	articles: ArticleSummary[]
+	onCalendarSelect?: CalendarSelect
+	onEditProfile?: () => void
+}) {
+	const id = useId()
+	const [tab, setTab] = useState<'joined' | 'hosted' | 'articles'>('joined')
+	return (
+		<section className="calendar-directory" aria-labelledby={`${id}-title`}>
+			<header className="directory-heading">
+				<div className="directory-profile">
+					<span className="directory-avatar" aria-hidden="true">
+						{name.slice(0, 1)}
+					</span>
+					<h1 id={`${id}-title`}>{name}</h1>
+					<span>@{handle}</span>
+				</div>
+				{onEditProfile && (
+					<button type="button" onClick={onEditProfile}>
+						プロフィールを編集
+					</button>
+				)}
+			</header>
+			<fieldset className="directory-tabs" aria-label="表示内容">
+				{(
+					[
+						{ key: 'joined', label: '参加', count: joined.length },
+						{ key: 'hosted', label: '主催', count: hosted.length },
+						{ key: 'articles', label: '記事', count: articles.length },
+					] as const
+				).map((item) => (
+					<button key={item.key} type="button" aria-pressed={tab === item.key} onClick={() => setTab(item.key)}>
+						{item.label} {item.count}
+					</button>
+				))}
+			</fieldset>
+			{tab === 'articles' ? (
+				articles.length ? (
+					<ul className="directory-articles">
+						{articles.map((article) => (
+							<li key={article.id}>
+								<time dateTime={article.date}>{article.date.replaceAll('-', '/')}</time>
+								<a href={article.url} target="_blank" rel="noreferrer">
+									{article.title}
+									<span className="directory-visually-hidden">（新しいタブで開く）</span>
+								</a>
+								<span>{article.calendarTitle}</span>
+							</li>
+						))}
+					</ul>
+				) : (
+					<p className="directory-empty">記事はありません</p>
+				)
+			) : (tab === 'joined' ? joined : hosted).length ? (
+				<CalendarRows calendars={tab === 'joined' ? joined : hosted} onCalendarSelect={onCalendarSelect} />
+			) : (
+				<p className="directory-empty">カレンダーはありません</p>
+			)}
+		</section>
+	)
+}
+
+export function CalendarArchive({
+	calendars,
+	initialYear,
+	onCalendarSelect,
+}: {
+	calendars: CalendarSummary[]
+	initialYear?: number
+	onCalendarSelect?: CalendarSelect
+}) {
+	const id = useId()
+	const years = [...new Set(calendars.map((calendar) => calendar.year))].sort((a, b) => b - a)
+	const [year, setYear] = useState(initialYear ?? years[0])
+	const selected = calendars.filter((calendar) => calendar.year === year)
+	return (
+		<section className="calendar-directory" aria-labelledby={`${id}-title`}>
+			<header className="directory-heading">
+				<h1 id={`${id}-title`}>過去のカレンダー</h1>
+			</header>
+			<fieldset className="directory-years" aria-label="年を選択">
+				{years.map((value) => (
+					<button key={value} type="button" aria-pressed={value === year} onClick={() => setYear(value)}>
+						{value}年
+					</button>
+				))}
+			</fieldset>
+			{selected.length ? (
+				<>
+					<h2 className="directory-archive-year">{year}年</h2>
+					<CalendarRows calendars={selected} onCalendarSelect={onCalendarSelect} />
+				</>
+			) : (
+				<p className="directory-empty">カレンダーはありません</p>
+			)}
+		</section>
+	)
+}
