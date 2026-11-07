@@ -1,0 +1,21 @@
+{
+	"name": "@atventar/appview",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "tsx watch --env-file-if-exists=.env src/index.ts",
+		"build": "tsc -p tsconfig.build.json",
+		"typecheck": "tsc --noEmit",
+		"start": "node --env-file-if-exists=.env dist/index.js"
+	},
+	"dependencies": {
+		"@hono/node-server": "^2.1.6",
+		"hono": "^4.13.16"
+	},
+	"devDependencies": {
+		"@types/node": "^24.19.2",
+		"tsx": "^4.23.15",
+		"typescript": "~7.0.2"
+	}
+}

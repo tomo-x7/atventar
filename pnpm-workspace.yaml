@@ -1,0 +1,6 @@
+packages:
+  - client
+  - appview
+
+allowBuilds:
+  esbuild: true

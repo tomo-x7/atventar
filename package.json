@@ -1,0 +1,22 @@
+{
+	"name": "atventar",
+	"private": true,
+	"type": "module",
+	"packageManager": "pnpm@11.21.0",
+	"engines": {
+		"node": ">=24"
+	},
+	"scripts": {
+		"dev": "pnpm -r --parallel --stream run dev",
+		"dev:client": "pnpm --filter client dev",
+		"dev:appview": "pnpm --filter @atventar/appview dev",
+		"build": "pnpm -r run build",
+		"typecheck": "pnpm --filter client exec tsc -b && pnpm --filter @atventar/appview typecheck",
+		"lint": "biome check .",
+		"check": "pnpm lint && pnpm typecheck",
+		"format": "biome format --write ."
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.2.3"
+	}
+}
