@@ -1,7 +1,7 @@
 .calendar-form-ui {
 	box-sizing: border-box;
-	width: 680px;
-	max-width: min(100%, calc(100vw - 32px));
+	width: min(680px, calc(100vw - 32px));
+	max-width: 100%;
 	padding: 28px;
 	background: #fff;
 	color: #222925;
