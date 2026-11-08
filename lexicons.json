@@ -7,7 +7,8 @@
 		"win.tomo-x.atventar.getCalendar",
 		"win.tomo-x.atventar.getProfile",
 		"win.tomo-x.atventar.listCalendars",
-		"win.tomo-x.atventar.searchCalendars"
+		"win.tomo-x.atventar.searchCalendars",
+		"site.standard.document"
 	],
 	"resolutions": {
 		"com.atproto.repo.strongRef": {
@@ -45,6 +46,10 @@
 		"win.tomo-x.atventar.searchCalendars": {
 			"uri": "at://did:plc:qcwvyds5tixmcwkwrg3hxgxd/com.atproto.lexicon.schema/win.tomo-x.atventar.searchCalendars",
 			"cid": "bafyreiakcyeaclqi2lvpqg63jqjigxsnvo62lk7czre5o6cljbvpbg2sla"
+		},
+		"site.standard.document": {
+			"uri": "at://did:plc:re3ebnp5v7ffagz6rb6xfei4/com.atproto.lexicon.schema/site.standard.document",
+			"cid": "bafyreifylc5lfr4vqfzrwdtqm4pnfg7cbra7z4acbgikylqandzefwdeaq"
 		}
 	}
 }

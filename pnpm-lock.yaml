@@ -64,6 +64,9 @@ importers:
       '@atpassport/client':
         specifier: 0.2.3
         version: 0.2.3(react@19.3.1)
+      '@atproto/common-web':
+        specifier: ^0.5.17
+        version: 0.5.17
       '@atproto/lex':
         specifier: 0.4.7
         version: 0.4.7

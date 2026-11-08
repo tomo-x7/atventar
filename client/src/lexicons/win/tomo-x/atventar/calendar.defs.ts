@@ -37,3 +37,18 @@ export const $parse = /*#__PURE__*/ main.parse.bind(main);
 export const $safeParse = /*#__PURE__*/ main.safeParse.bind(main);
 export const $validate = /*#__PURE__*/ main.validate.bind(main);
 export const $safeValidate = /*#__PURE__*/ main.safeValidate.bind(main);
+
+/** A reference to the Advent calendar represented by a site.standard.document record. */
+type DocumentContent = { $type?: "win.tomo-x.atventar.calendar#documentContent";
+
+  /**
+   * DID-based AT URI of the win.tomo-x.atventar.calendar record. Independent of calendar sheet numbers.
+   */
+  "calendar":l.AtUriString };
+
+export type { DocumentContent };
+
+/** A reference to the Advent calendar represented by a site.standard.document record. */
+const documentContent = /*#__PURE__*/ l.typedObject<DocumentContent>($nsid, "documentContent", /*#__PURE__*/ l.object({"calendar":/*#__PURE__*/ l.string({"format":"at-uri"})}));
+
+export { documentContent };

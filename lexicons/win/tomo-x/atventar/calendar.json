@@ -8,14 +8,21 @@
 				"type": "object",
 				"required": ["title", "year", "createdAt"],
 				"properties": {
-					"year": { "type": "integer", "maximum": 9999, "minimum": 1 },
+					"year": {
+						"type": "integer",
+						"maximum": 9999,
+						"minimum": 1
+					},
 					"title": {
 						"type": "string",
 						"maxLength": 1000,
 						"minLength": 1,
 						"maxGraphemes": 100
 					},
-					"createdAt": { "type": "string", "format": "datetime" },
+					"createdAt": {
+						"type": "string",
+						"format": "datetime"
+					},
 					"description": {
 						"type": "string",
 						"maxLength": 30000,
@@ -24,6 +31,18 @@
 				}
 			},
 			"description": "An Advent calendar for December 1 through 25. The repository owner is the organizer."
+		},
+		"documentContent": {
+			"type": "object",
+			"description": "A reference to the Advent calendar represented by a site.standard.document record.",
+			"required": ["calendar"],
+			"properties": {
+				"calendar": {
+					"type": "string",
+					"format": "at-uri",
+					"description": "DID-based AT URI of the win.tomo-x.atventar.calendar record. Independent of calendar sheet numbers."
+				}
+			}
 		}
 	},
 	"$type": "com.atproto.lexicon.schema",

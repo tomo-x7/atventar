@@ -4,7 +4,7 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"lexgen": "gen-xrpc-hono --yes src/lexicons ../lexicons/*/*/*/*.json",
+		"lexgen": "gen-xrpc-hono --yes src/lexicons ../lexicons/win/tomo-x/atventar/*.json ../lexicons/com/atproto/repo/strongRef.json",
 		"dev": "wrangler dev --config ../wrangler.jsonc",
 		"build": "wrangler deploy --config ../wrangler.jsonc --dry-run --outdir dist",
 		"typecheck": "tsc --noEmit",

@@ -67,6 +67,20 @@ export const schemaDict = {
         description:
           'An Advent calendar for December 1 through 25. The repository owner is the organizer.',
       },
+      documentContent: {
+        type: 'object',
+        description:
+          'A reference to the Advent calendar represented by a site.standard.document record.',
+        required: ['calendar'],
+        properties: {
+          calendar: {
+            type: 'string',
+            format: 'at-uri',
+            description:
+              'DID-based AT URI of the win.tomo-x.atventar.calendar record. Independent of calendar sheet numbers.',
+          },
+        },
+      },
     },
     $type: 'com.atproto.lexicon.schema',
     lexicon: 1,
