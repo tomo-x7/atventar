@@ -1,10 +1,10 @@
-import { useId } from 'react'
+import { useId, useState } from 'react'
 import './advent-calendar.css'
 
 export type CalendarEntry = {
 	day: number
 	author: string
-	title?: string
+	title: string
 	url?: string
 	comment?: string
 	status: 'reserved' | 'published' | 'scheduled'
@@ -13,7 +13,7 @@ export type CalendarEntry = {
 
 export type CalendarSheet = {
 	id: string
-	name: string
+	number: number
 	entries: CalendarEntry[]
 }
 
@@ -22,7 +22,7 @@ export type AdventCalendarProps = {
 	year: number
 	today?: number
 	readOnly?: boolean
-	onJoin?: (sheetId: string, day: number) => void
+	onJoin?: (day: number) => void
 	onEditEntry?: (sheetId: string, entry: CalendarEntry) => void
 }
 
@@ -31,7 +31,7 @@ export function AdventCalendar({ sheet, year, today, readOnly, onJoin, onEditEnt
 	return (
 		<section className="ac-sheet" aria-labelledby={headingId}>
 			<header className="ac-sheet-heading">
-				<h2 id={headingId}>{sheet.name}</h2>
+				<h2 id={headingId}>カレンダー {sheet.number}</h2>
 				<span>{sheet.entries.length} / 25</span>
 			</header>
 			<ol className="ac-days">
@@ -44,47 +44,52 @@ export function AdventCalendar({ sheet, year, today, readOnly, onJoin, onEditEnt
 							className={`ac-day ${entry ? 'ac-day-filled' : ''}`}
 							aria-current={today === day ? 'date' : undefined}
 						>
-							<div className="ac-day-top">
-								<time dateTime={`${year}-12-${String(day).padStart(2, '0')}`}>{day}</time>
-								{entry?.isOwner && onEditEntry && !readOnly && (
-									<button
-										type="button"
-										className="ac-text-button"
-										aria-label={`${sheet.name} 12月${day}日の登録を編集`}
-										onClick={() => onEditEntry(sheet.id, entry)}
-									>
-										編集
-									</button>
-								)}
-							</div>
-							{entry ? (
-								<>
-									<div className="ac-author">{entry.author}</div>
-									{entry.status === 'published' && entry.title ? (
-										entry.url ? (
+							<time dateTime={`${year}-12-${String(day).padStart(2, '0')}`}>
+								<span className="ac-visually-hidden">12月</span>
+								{day}
+								<span className="ac-visually-hidden">日</span>
+							</time>
+							<div className="ac-entry">
+								{entry ? (
+									<>
+										<div className="ac-author">{entry.author}</div>
+										{entry.status === 'published' && entry.url ? (
 											<a className="ac-article" href={entry.url} target="_blank" rel="noreferrer">
 												{entry.title}
 												<span aria-hidden="true"> ↗</span>
 											</a>
 										) : (
-											<span className="ac-article">{entry.title}</span>
-										)
-									) : (
-										<span className="ac-status">{entry.status === 'scheduled' ? '公開待ち' : '参加登録済み'}</span>
+											<div className="ac-topic">{entry.title}</div>
+										)}
+										{entry.comment && <p className="ac-comment">{entry.comment}</p>}
+									</>
+								) : (
+									<span className="ac-status">空き</span>
+								)}
+							</div>
+							{!readOnly && (
+								<div className="ac-day-actions">
+									{entry?.isOwner && onEditEntry && (
+										<button
+											type="button"
+											className="ac-text-button"
+											aria-label={`カレンダー ${sheet.number} 12月${day}日の登録を編集`}
+											onClick={() => onEditEntry(sheet.id, entry)}
+										>
+											編集
+										</button>
 									)}
-									{entry.comment && <p className="ac-comment">{entry.comment}</p>}
-								</>
-							) : onJoin && !readOnly ? (
-								<button
-									className="ac-join"
-									type="button"
-									aria-label={`${sheet.name} 12月${day}日に参加する`}
-									onClick={() => onJoin(sheet.id, day)}
-								>
-									＋ 参加する
-								</button>
-							) : (
-								<span className="ac-status">空き</span>
+									{onJoin && (
+										<button
+											className="ac-join"
+											type="button"
+											aria-label={`カレンダー ${sheet.number} 12月${day}日に参加する`}
+											onClick={() => onJoin(day)}
+										>
+											参加
+										</button>
+									)}
+								</div>
 							)}
 						</li>
 					)
@@ -99,7 +104,6 @@ export type CalendarCollectionProps = Omit<AdventCalendarProps, 'sheet'> & {
 	description: string
 	organizer: string
 	sheets: CalendarSheet[]
-	onAddSheet?: () => void
 	onEdit?: () => void
 }
 
@@ -108,10 +112,11 @@ export function CalendarCollection({
 	description,
 	organizer,
 	sheets,
-	onAddSheet,
 	onEdit,
 	...calendarProps
 }: CalendarCollectionProps) {
+	const [selectedId, setSelectedId] = useState(sheets[0]?.id)
+	const activeId = sheets.some((sheet) => sheet.id === selectedId) ? selectedId : sheets[0]?.id
 	return (
 		<main className="ac-root">
 			<header className="ac-collection-heading">
@@ -131,19 +136,29 @@ export function CalendarCollection({
 			</header>
 			<div className="ac-toolbar">
 				<strong>{sheets.length} 枚のカレンダー</strong>
-				<span>
-					{sheets.reduce((sum, sheet) => sum + sheet.entries.length, 0)} / {sheets.length * 25} 枠
-				</span>
-				{onAddSheet && (
-					<button className="ac-button ac-button-primary" type="button" onClick={onAddSheet}>
-						＋ カレンダーを追加
-					</button>
-				)}
+				<span>{sheets.reduce((sum, sheet) => sum + sheet.entries.length, 0)} 件の参加登録</span>
 			</div>
+			{sheets.length > 1 && (
+				<fieldset className="ac-sheet-picker" aria-label="表示するカレンダー">
+					{sheets.map((sheet) => (
+						<button
+							key={sheet.id}
+							type="button"
+							aria-label={`カレンダー ${sheet.number}を表示`}
+							aria-pressed={sheet.id === activeId}
+							onClick={() => setSelectedId(sheet.id)}
+						>
+							{sheet.number}
+						</button>
+					))}
+				</fieldset>
+			)}
 			{sheets.length ? (
 				<div className="ac-sheets">
 					{sheets.map((sheet) => (
-						<AdventCalendar key={sheet.id} sheet={sheet} {...calendarProps} />
+						<div className="ac-sheet-panel" key={sheet.id} data-active={sheet.id === activeId}>
+							<AdventCalendar sheet={sheet} {...calendarProps} />
+						</div>
 					))}
 				</div>
 			) : (

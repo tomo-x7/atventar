@@ -11,16 +11,16 @@ const titles = [
 	'個人開発を続ける工夫',
 ]
 
-export function makeSheet(id: string, name: string, count: number): CalendarSheet {
+export function makeSheet(id: string, number: number, count: number): CalendarSheet {
 	return {
 		id,
-		name,
+		number,
 		entries: Array.from(
 			{ length: Math.min(25, Math.max(0, count)) },
 			(_, index): CalendarEntry => ({
 				day: index + 1,
 				author: authors[index % authors.length],
-				title: index < 7 ? titles[index] : undefined,
+				title: titles[index % titles.length],
 				url: index < 7 ? 'https://example.com' : undefined,
 				status: index < 7 ? 'published' : index === 9 ? 'scheduled' : 'reserved',
 				isOwner: index === 3,
@@ -29,4 +29,4 @@ export function makeSheet(id: string, name: string, count: number): CalendarShee
 	}
 }
 
-export const sampleSheets = [makeSheet('first', 'カレンダー 1', 25), makeSheet('second', 'カレンダー 2', 14)]
+export const sampleSheets = [makeSheet('first', 1, 25), makeSheet('second', 2, 14)]
