@@ -1,6 +1,18 @@
 import type { CalendarEntry, CalendarSheet } from './AdventCalendar'
 
 const authors = ['mori', '佐藤 はる', 'natsuki', '小林', 'yuki', '田中', 'aki']
+// Local sample identicons keep Storybook independent of external avatar hosts.
+const avatars = authors.map((_, authorIndex) => {
+	const cells = Array.from({ length: 25 }, (_, index) => {
+		const x = index % 5
+		const y = Math.floor(index / 5)
+		const bit = y * 3 + Math.min(x, 4 - x)
+		return (((authorIndex + 3) * 7919) >> bit) & 1
+			? `<rect x="${x * 6 + 5}" y="${y * 6 + 5}" width="6" height="6"/>`
+			: ''
+	}).join('')
+	return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="#e9eeea" d="M0 0h40v40H0z"/><g fill="#436451">${cells}</g></svg>`)}`
+})
 const titles = [
 	'小さなWebを作り続ける',
 	'CSS Gridで考えるレイアウト',
@@ -20,6 +32,7 @@ export function makeSheet(id: string, number: number, count: number): CalendarSh
 			(_, index): CalendarEntry => ({
 				day: index + 1,
 				author: authors[index % authors.length],
+				authorAvatarUrl: avatars[index % avatars.length],
 				title: titles[index % titles.length],
 				url: index < 7 ? 'https://example.com' : undefined,
 				status: index < 7 ? 'published' : index === 9 ? 'scheduled' : 'reserved',

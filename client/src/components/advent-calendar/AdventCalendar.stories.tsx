@@ -21,7 +21,20 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Multiple: Story = { name: '複数枚' }
+export const Multiple: Story = {
+	name: '複数枚',
+	play: async ({ canvasElement, args }) => {
+		const canvas = within(canvasElement)
+		await userEvent.click(canvas.getByRole('button', { name: 'カレンダー 2を表示' }))
+		await expect(canvas.getByRole('heading', { name: 'カレンダー 2' })).toBeVisible()
+		await expect(canvas.queryByRole('heading', { name: 'カレンダー 1' })).not.toBeInTheDocument()
+		await userEvent.click(canvas.getByRole('button', { name: '12月16日の空き枠を表示' }))
+		const row = canvas.getByRole('list', { name: '日付ごとの参加登録' }).children[15]
+		await expect(row).toHaveFocus()
+		await userEvent.click(canvas.getByRole('button', { name: 'カレンダー 2 12月16日に参加する' }))
+		await expect(args.onJoin).toHaveBeenCalledWith(16)
+	},
+}
 export const Single: Story = { name: '1枚', args: { sheets: [sampleSheets[1]] } }
 export const ThreeSheets: Story = { name: '3枚', args: { sheets: [...sampleSheets, makeSheet('third', 3, 4)] } }
 export const Empty: Story = { name: '未作成', args: { sheets: [] } }
@@ -99,7 +112,7 @@ export const PlannedContent: Story = {
 export const Sheet: StoryObj<typeof AdventCalendar> = {
 	name: 'カレンダー単体',
 	render: () => (
-		<div style={{ padding: 24, maxWidth: 800 }}>
+		<div style={{ padding: 24, maxWidth: 1100 }}>
 			<AdventCalendar sheet={sampleSheets[1]} year={2026} onJoin={fn()} onEditEntry={fn()} />
 		</div>
 	),
