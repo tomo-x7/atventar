@@ -230,7 +230,7 @@ export function AdventCalendar({
 	)
 }
 
-export type CalendarCollectionProps = {
+export type CalendarCollectionProps = CalendarNavigation & {
 	title: string
 	year: number
 	description: string
@@ -239,13 +239,12 @@ export type CalendarCollectionProps = {
 	sheets: CalendarSheet[]
 	projectHref: string
 	getCalendarHref: (number: number) => string
-	getJoinHref: (day?: number) => string
 	shareHref: string
 	readOnly?: boolean
-	onJoin?: (day?: number) => void
 	onShare?: () => void
 	onEdit?: () => void
 	onCalendarSelect?: (number: number) => void
+	today?: number
 }
 
 function ProjectHeading({
@@ -255,6 +254,7 @@ function ProjectHeading({
 	organizer,
 	organizerHref,
 	sheets,
+	getCalendarHref,
 	getJoinHref,
 	shareHref,
 	readOnly,
@@ -279,7 +279,13 @@ function ProjectHeading({
 			</div>
 			<div className="ac-toolbar">
 				<strong>{sheets.reduce((sum, sheet) => sum + sheet.entries.length, 0)} 件の参加登録</strong>
-				<span>{sheets.length} 枚のカレンダー</span>
+				<span>
+					{sheets.length === 1 ? (
+						<a href={getCalendarHref(sheets[0].number)}>1 枚のカレンダー</a>
+					) : (
+						`${sheets.length} 枚のカレンダー`
+					)}
+				</span>
 				<div className="ac-project-actions">
 					{!readOnly && (
 						<a
@@ -319,13 +325,31 @@ function ProjectHeading({
 	)
 }
 
+function visibleSheets(sheets: CalendarSheet[]): CalendarSheet[] {
+	// A display placeholder, not a stored sheet or a client-side placement decision.
+	return sheets.length
+		? [...sheets].sort((a, b) => a.number - b.number)
+		: [{ id: 'unassigned-first-calendar', number: 1, entries: [] }]
+}
+
 export function CalendarCollection(props: CalendarCollectionProps) {
 	const id = useId()
-	const sheets = [...props.sheets].sort((a, b) => a.number - b.number)
+	const sheets = visibleSheets(props.sheets)
 	return (
 		<main className="ac-root">
-			<ProjectHeading {...props} />
-			{sheets.length ? (
+			<ProjectHeading {...props} sheets={sheets} />
+			{sheets.length === 1 ? (
+				<AdventCalendar
+					sheet={sheets[0]}
+					year={props.year}
+					today={props.today}
+					readOnly={props.readOnly}
+					getEntryHref={props.getEntryHref}
+					getJoinHref={props.getJoinHref}
+					onJoin={props.onJoin}
+					onEditEntry={props.onEditEntry}
+				/>
+			) : (
 				<div className="ac-card-grid">
 					{sheets.map((sheet) => (
 						<a
@@ -369,48 +393,46 @@ export function CalendarCollection(props: CalendarCollectionProps) {
 						</a>
 					))}
 				</div>
-			) : (
-				<p className="ac-empty">参加登録はまだありません</p>
 			)}
 		</main>
 	)
 }
 
-export type CalendarDetailProps = CalendarCollectionProps &
-	Omit<CalendarNavigation, 'getJoinHref' | 'onJoin'> & {
-		currentNumber: number
-		today?: number
-	}
+export type CalendarDetailProps = CalendarCollectionProps & {
+	currentNumber: number
+}
 
 export function CalendarDetail(props: CalendarDetailProps) {
-	const sheets = [...props.sheets].sort((a, b) => a.number - b.number)
+	const sheets = visibleSheets(props.sheets)
 	const current = sheets.find((sheet) => sheet.number === props.currentNumber)
 	return (
 		<main className="ac-root">
 			<a className="ac-back-link" href={props.projectHref}>
 				企画トップに戻る
 			</a>
-			<ProjectHeading {...props} />
-			<nav className="ac-sheet-navigation" aria-label="他のカレンダー">
-				{sheets.map((sheet) => (
-					<a
-						key={sheet.id}
-						href={props.getCalendarHref(sheet.number)}
-						aria-current={sheet.number === props.currentNumber ? 'page' : undefined}
-						onClick={
-							props.onCalendarSelect
-								? (event) => {
-										if (!isPlainClick(event)) return
-										event.preventDefault()
-										props.onCalendarSelect?.(sheet.number)
-									}
-								: undefined
-						}
-					>
-						{sheet.number}枚目
-					</a>
-				))}
-			</nav>
+			<ProjectHeading {...props} sheets={sheets} />
+			{sheets.length > 1 && (
+				<nav className="ac-sheet-navigation" aria-label="他のカレンダー">
+					{sheets.map((sheet) => (
+						<a
+							key={sheet.id}
+							href={props.getCalendarHref(sheet.number)}
+							aria-current={sheet.number === props.currentNumber ? 'page' : undefined}
+							onClick={
+								props.onCalendarSelect
+									? (event) => {
+											if (!isPlainClick(event)) return
+											event.preventDefault()
+											props.onCalendarSelect?.(sheet.number)
+										}
+									: undefined
+							}
+						>
+							{sheet.number}枚目
+						</a>
+					))}
+				</nav>
+			)}
 			{current ? (
 				<>
 					<div className="ac-detail-heading">

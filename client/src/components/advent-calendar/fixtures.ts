@@ -56,7 +56,10 @@ export function makeSheet(id: string, number: number, count: number): CalendarSh
 
 export const sampleSheets = [makeSheet('first', 1, 25), makeSheet('second', 2, 14)]
 
+export const getEntryHref = (uri: string) => `/participations/${encodeURIComponent(uri)}`
+
 export const projectProps = {
+	getEntryHref,
 	year: 2026,
 	title: 'ものづくりとWeb',
 	description: 'Webの技術、デザイン、日々の制作について、12月の25日間に書くカレンダーです。',
@@ -68,5 +71,3 @@ export const projectProps = {
 	getJoinHref: (day?: number) => `/projects/web-2026/join${day ? `?day=${day}` : ''}`,
 	shareHref: '/projects/web-2026/share',
 } satisfies CalendarCollectionProps
-
-export const getEntryHref = (uri: string) => `/participations/${encodeURIComponent(uri)}`

@@ -97,3 +97,12 @@ export const Navigation: Story = {
 		await expect(canvas.getByRole('heading', { name: '2枚目 / 全2枚' })).toBeVisible()
 	},
 }
+
+export const Single: Story = {
+	name: '1枚・切り替えなし',
+	args: { sheets: [sampleSheets[0]], currentNumber: 1 },
+	play: async ({ canvasElement }) => {
+		await expect(within(canvasElement).queryByRole('navigation', { name: '他のカレンダー' })).not.toBeInTheDocument()
+	},
+}
+export const Empty: Story = { name: '登録前の1枚目', args: { sheets: [], currentNumber: 1 } }
