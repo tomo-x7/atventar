@@ -1,0 +1,53 @@
+{
+	"id": "win.tomo-x.atventar.entry",
+	"defs": {
+		"main": {
+			"key": "tid",
+			"type": "record",
+			"record": {
+				"type": "object",
+				"required": ["calendar", "day", "title", "createdAt"],
+				"properties": {
+					"day": {
+						"type": "integer",
+						"maximum": 25,
+						"minimum": 1,
+						"description": "Day of December in the referenced calendar's year."
+					},
+					"url": {
+						"type": "string",
+						"format": "uri",
+						"maxLength": 8192,
+						"description": "Public HTTP(S) URL of the article. The application must enforce the HTTP(S) scheme. Omit when unpublished. Backlink path: .url."
+					},
+					"title": {
+						"type": "string",
+						"maxLength": 2000,
+						"minLength": 1,
+						"description": "Public title or planned topic, available before the article is published.",
+						"maxGraphemes": 200
+					},
+					"article": {
+						"ref": "com.atproto.repo.strongRef",
+						"type": "ref",
+						"description": "Optional reference to the article's AT Protocol record, of any collection. Use a DID-based record URI. May coexist with url. Backlink path: .article.uri."
+					},
+					"comment": {
+						"type": "string",
+						"maxLength": 10000,
+						"maxGraphemes": 1000
+					},
+					"calendar": {
+						"ref": "com.atproto.repo.strongRef",
+						"type": "ref",
+						"description": "Reference to a win.tomo-x.atventar.calendar record. Use a DID-based record URI. Backlink path: .calendar.uri."
+					},
+					"createdAt": { "type": "string", "format": "datetime" }
+				}
+			},
+			"description": "A participant's registration for a day in an Advent calendar. The repository owner is the participant. URL and article reference may be provided independently or together, or omitted before publication."
+		}
+	},
+	"$type": "com.atproto.lexicon.schema",
+	"lexicon": 1
+}

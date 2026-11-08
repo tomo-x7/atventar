@@ -1,0 +1,49 @@
+{
+	"id": "win.tomo-x.atventar.getCalendar",
+	"defs": {
+		"main": {
+			"type": "query",
+			"errors": [
+				{
+					"name": "CalendarNotFound",
+					"description": "The requested calendar is not indexed or is no longer available."
+				}
+			],
+			"output": {
+				"schema": {
+					"type": "object",
+					"required": ["calendar", "entries"],
+					"properties": {
+						"entries": {
+							"type": "array",
+							"items": {
+								"ref": "win.tomo-x.atventar.defs#entryView",
+								"type": "ref"
+							},
+							"description": "All indexed valid registrations for this calendar. Empty when there are no registrations. The length equals calendar.entryCount in this response."
+						},
+						"calendar": {
+							"ref": "win.tomo-x.atventar.defs#calendarView",
+							"type": "ref"
+						}
+					}
+				},
+				"encoding": "application/json"
+			},
+			"parameters": {
+				"type": "params",
+				"required": ["uri"],
+				"properties": {
+					"uri": {
+						"type": "string",
+						"format": "at-uri",
+						"description": "DID-based URI of a win.tomo-x.atventar.calendar record."
+					}
+				}
+			},
+			"description": "Get the current calendar and all its indexed valid registrations across every day and sheet. Entries are ordered by day ascending, indexedAt ascending, then URI ascending. Match calendar membership by URI regardless of the originally referenced CID. This response is not paginated. Future-day registrations remain in the response, but their article URLs and article record references are omitted. Display sheet numbers are dynamically reassigned."
+		}
+	},
+	"$type": "com.atproto.lexicon.schema",
+	"lexicon": 1
+}

@@ -1,0 +1,50 @@
+{
+	"version": 2,
+	"lexicons": [
+		"win.tomo-x.atventar.calendar",
+		"win.tomo-x.atventar.entry",
+		"win.tomo-x.atventar.getActorEntries",
+		"win.tomo-x.atventar.getCalendar",
+		"win.tomo-x.atventar.getProfile",
+		"win.tomo-x.atventar.listCalendars",
+		"win.tomo-x.atventar.searchCalendars"
+	],
+	"resolutions": {
+		"com.atproto.repo.strongRef": {
+			"uri": "at://did:plc:6msi3pj7krzih5qxqtryxlzw/com.atproto.lexicon.schema/com.atproto.repo.strongRef",
+			"cid": "bafyreifrkdbnkvfjujntdaeigolnrjj3srrs53tfixjhmacclps72qlov4"
+		},
+		"win.tomo-x.atventar.calendar": {
+			"uri": "at://did:plc:qcwvyds5tixmcwkwrg3hxgxd/com.atproto.lexicon.schema/win.tomo-x.atventar.calendar",
+			"cid": "bafyreia5rvuqx4e5de525hcjbdchbjrqwo4enxegdv5sceenp4rmnywm3a"
+		},
+		"win.tomo-x.atventar.defs": {
+			"uri": "at://did:plc:qcwvyds5tixmcwkwrg3hxgxd/com.atproto.lexicon.schema/win.tomo-x.atventar.defs",
+			"cid": "bafyreihzlzczwfpvzce36fqfp3e7pjenub6aeftikanlfnn4xswpgm4x2m"
+		},
+		"win.tomo-x.atventar.entry": {
+			"uri": "at://did:plc:qcwvyds5tixmcwkwrg3hxgxd/com.atproto.lexicon.schema/win.tomo-x.atventar.entry",
+			"cid": "bafyreie2u4zabxxglhn6bw3ny3zagttdfo6wufhac624ae6dtfp54qnyni"
+		},
+		"win.tomo-x.atventar.getActorEntries": {
+			"uri": "at://did:plc:qcwvyds5tixmcwkwrg3hxgxd/com.atproto.lexicon.schema/win.tomo-x.atventar.getActorEntries",
+			"cid": "bafyreidea4hvjcgsxmtz3shxy2lish5mit5cauglbqy3skd6cwsppeen6i"
+		},
+		"win.tomo-x.atventar.getCalendar": {
+			"uri": "at://did:plc:qcwvyds5tixmcwkwrg3hxgxd/com.atproto.lexicon.schema/win.tomo-x.atventar.getCalendar",
+			"cid": "bafyreihxrpxa3kfrgl3clafsn3uybvb2s4ckhhbte2mfafvec3xwxkr7wi"
+		},
+		"win.tomo-x.atventar.getProfile": {
+			"uri": "at://did:plc:qcwvyds5tixmcwkwrg3hxgxd/com.atproto.lexicon.schema/win.tomo-x.atventar.getProfile",
+			"cid": "bafyreibbeii3glxy3dmhjklcy56dy3iwxwbjm6q2epldidn44mjkbn4kbm"
+		},
+		"win.tomo-x.atventar.listCalendars": {
+			"uri": "at://did:plc:qcwvyds5tixmcwkwrg3hxgxd/com.atproto.lexicon.schema/win.tomo-x.atventar.listCalendars",
+			"cid": "bafyreihu3gq6e5cltc7qnshe4twarcym7pakuof2mqhdc6iczzs4dwz4i4"
+		},
+		"win.tomo-x.atventar.searchCalendars": {
+			"uri": "at://did:plc:qcwvyds5tixmcwkwrg3hxgxd/com.atproto.lexicon.schema/win.tomo-x.atventar.searchCalendars",
+			"cid": "bafyreiakcyeaclqi2lvpqg63jqjigxsnvo62lk7czre5o6cljbvpbg2sla"
+		}
+	}
+}

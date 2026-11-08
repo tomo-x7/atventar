@@ -1,0 +1,61 @@
+{
+	"id": "win.tomo-x.atventar.getActorEntries",
+	"defs": {
+		"main": {
+			"type": "query",
+			"errors": [
+				{
+					"name": "InvalidCursor",
+					"description": "The cursor is malformed, expired, or does not match the request filters and limit."
+				}
+			],
+			"output": {
+				"schema": {
+					"type": "object",
+					"required": ["entries"],
+					"properties": {
+						"cursor": {
+							"type": "string",
+							"description": "Present only when another page is available."
+						},
+						"entries": {
+							"type": "array",
+							"items": {
+								"ref": "win.tomo-x.atventar.defs#entryView",
+								"type": "ref"
+							},
+							"maxLength": 100
+						}
+					}
+				},
+				"encoding": "application/json"
+			},
+			"parameters": {
+				"type": "params",
+				"required": ["actor"],
+				"properties": {
+					"year": { "type": "integer", "maximum": 9999, "minimum": 1 },
+					"actor": {
+						"type": "string",
+						"format": "at-identifier",
+						"description": "Participant DID or handle; resolve handles to DIDs before filtering."
+					},
+					"limit": {
+						"type": "integer",
+						"default": 50,
+						"maximum": 100,
+						"minimum": 1
+					},
+					"cursor": {
+						"type": "string",
+						"maxLength": 4096,
+						"description": "Opaque continuation cursor. Reuse the same filters and limit; omit for the first page."
+					}
+				}
+			},
+			"description": "List a participant's registrations, newest first by indexedAt, then URI ascending. An optional year filters the referenced calendar's year. Uses the same future-day article filtering and dynamic sheet assignment as getCalendar, including when requesting the caller's own registrations."
+		}
+	},
+	"$type": "com.atproto.lexicon.schema",
+	"lexicon": 1
+}

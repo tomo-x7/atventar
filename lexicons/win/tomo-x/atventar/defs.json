@@ -1,0 +1,130 @@
+{
+	"id": "win.tomo-x.atventar.defs",
+	"defs": {
+		"entryView": {
+			"type": "object",
+			"required": ["uri", "cid", "author", "calendar", "day", "title", "createdAt", "indexedAt", "sheet"],
+			"properties": {
+				"cid": {
+					"type": "string",
+					"format": "cid",
+					"description": "CID of the complete current source record, not a hash of this projected view."
+				},
+				"day": {
+					"type": "integer",
+					"maximum": 25,
+					"minimum": 1,
+					"description": "Day of December in the referenced calendar's year."
+				},
+				"uri": {
+					"type": "string",
+					"format": "at-uri",
+					"description": "DID-based URI of the current record."
+				},
+				"url": {
+					"type": "string",
+					"format": "uri",
+					"maxLength": 8192,
+					"description": "Article HTTP(S) URL. Omitted for future scheduled days in AppView responses, even if present in the public source record."
+				},
+				"sheet": {
+					"type": "integer",
+					"minimum": 1,
+					"description": "Current 1-based display sheet, dynamically reassigned after joins, withdrawals or day changes. Within each day, sort by indexedAt ascending then URI ascending and assign consecutive sheet numbers starting at 1. Not stored in the participant record."
+				},
+				"title": {
+					"type": "string",
+					"maxLength": 2000,
+					"minLength": 1,
+					"description": "Public title or planned topic, available before the article is published.",
+					"maxGraphemes": 200
+				},
+				"author": {
+					"ref": "win.tomo-x.atventar.defs#profileView",
+					"type": "ref",
+					"description": "Profile of the repository owner. author.did identifies the record author."
+				},
+				"article": {
+					"ref": "com.atproto.repo.strongRef",
+					"type": "ref",
+					"description": "Article record strongRef. Omitted for future scheduled days in AppView responses, even if present in the public source record."
+				},
+				"comment": {
+					"type": "string",
+					"maxLength": 10000,
+					"maxGraphemes": 1000
+				},
+				"calendar": {
+					"ref": "win.tomo-x.atventar.defs#calendarView",
+					"type": "ref"
+				},
+				"createdAt": { "type": "string", "format": "datetime" },
+				"indexedAt": {
+					"type": "string",
+					"format": "datetime",
+					"description": "Time first indexed by this AppView; preserved across record updates."
+				}
+			},
+			"description": "AppView projection of a registration and its current calendar. Keeps the public planned title and comment, but omits url and article until 00:00 Asia/Tokyo on the calendar year and entry day in December. Source records remain public. Does not include the raw source record. Calendar association uses URI identity regardless of the originally referenced CID."
+		},
+		"profileView": {
+			"type": "object",
+			"required": ["did"],
+			"properties": {
+				"did": { "type": "string", "format": "did" },
+				"avatar": {
+					"type": "string",
+					"format": "uri",
+					"description": "HTTP(S) URL of the avatar image, suitable for direct display."
+				},
+				"handle": { "type": "string", "format": "handle" },
+				"description": {
+					"type": "string",
+					"maxLength": 25600,
+					"maxGraphemes": 2560
+				},
+				"displayName": {
+					"type": "string",
+					"maxLength": 640,
+					"maxGraphemes": 64
+				}
+			},
+			"description": "Service profile resolved by the AppView. Its source and storage are implementation details. A DID-only view is valid when display information is unavailable."
+		},
+		"calendarView": {
+			"type": "object",
+			"required": ["uri", "cid", "author", "record", "indexedAt", "entryCount"],
+			"properties": {
+				"cid": {
+					"type": "string",
+					"format": "cid",
+					"description": "CID of the current record."
+				},
+				"uri": {
+					"type": "string",
+					"format": "at-uri",
+					"description": "DID-based URI of the current record."
+				},
+				"author": {
+					"ref": "win.tomo-x.atventar.defs#profileView",
+					"type": "ref",
+					"description": "Profile of the repository owner. author.did identifies the record author."
+				},
+				"record": { "ref": "win.tomo-x.atventar.calendar", "type": "ref" },
+				"indexedAt": {
+					"type": "string",
+					"format": "datetime",
+					"description": "Time first indexed by this AppView; preserved across record updates."
+				},
+				"entryCount": {
+					"type": "integer",
+					"minimum": 0,
+					"description": "Total number of currently indexed valid registrations, across all days."
+				}
+			},
+			"description": "Current calendar record with AppView metadata."
+		}
+	},
+	"$type": "com.atproto.lexicon.schema",
+	"lexicon": 1
+}

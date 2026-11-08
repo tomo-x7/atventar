@@ -1,0 +1,60 @@
+{
+	"id": "win.tomo-x.atventar.listCalendars",
+	"defs": {
+		"main": {
+			"type": "query",
+			"errors": [
+				{
+					"name": "InvalidCursor",
+					"description": "The cursor is malformed, expired, or does not match the request filters and limit."
+				}
+			],
+			"output": {
+				"schema": {
+					"type": "object",
+					"required": ["calendars"],
+					"properties": {
+						"cursor": {
+							"type": "string",
+							"description": "Present only when another page is available."
+						},
+						"calendars": {
+							"type": "array",
+							"items": {
+								"ref": "win.tomo-x.atventar.defs#calendarView",
+								"type": "ref"
+							},
+							"maxLength": 100
+						}
+					}
+				},
+				"encoding": "application/json"
+			},
+			"parameters": {
+				"type": "params",
+				"properties": {
+					"year": { "type": "integer", "maximum": 9999, "minimum": 1 },
+					"limit": {
+						"type": "integer",
+						"default": 50,
+						"maximum": 100,
+						"minimum": 1
+					},
+					"author": {
+						"type": "string",
+						"format": "at-identifier",
+						"description": "Organizer DID or handle; resolve handles to DIDs before filtering."
+					},
+					"cursor": {
+						"type": "string",
+						"maxLength": 4096,
+						"description": "Opaque continuation cursor. Reuse the same filters and limit; omit for the first page."
+					}
+				}
+			},
+			"description": "List indexed calendars, newest first by indexedAt, then URI ascending. All supplied filters are combined with AND."
+		}
+	},
+	"$type": "com.atproto.lexicon.schema",
+	"lexicon": 1
+}

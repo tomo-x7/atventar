@@ -1,0 +1,68 @@
+{
+	"id": "win.tomo-x.atventar.searchCalendars",
+	"defs": {
+		"main": {
+			"type": "query",
+			"errors": [
+				{
+					"name": "InvalidCursor",
+					"description": "The cursor is malformed, expired, or does not match the request filters and limit."
+				}
+			],
+			"output": {
+				"schema": {
+					"type": "object",
+					"required": ["calendars"],
+					"properties": {
+						"cursor": {
+							"type": "string",
+							"description": "Present only when another page is available."
+						},
+						"calendars": {
+							"type": "array",
+							"items": {
+								"ref": "win.tomo-x.atventar.defs#calendarView",
+								"type": "ref"
+							},
+							"maxLength": 100
+						}
+					}
+				},
+				"encoding": "application/json"
+			},
+			"parameters": {
+				"type": "params",
+				"required": ["q"],
+				"properties": {
+					"q": {
+						"type": "string",
+						"maxLength": 1000,
+						"minLength": 1,
+						"description": "Non-blank search text. Trim surrounding whitespace and reject an empty result with InvalidRequest.",
+						"maxGraphemes": 100
+					},
+					"year": { "type": "integer", "maximum": 9999, "minimum": 1 },
+					"limit": {
+						"type": "integer",
+						"default": 50,
+						"maximum": 100,
+						"minimum": 1
+					},
+					"author": {
+						"type": "string",
+						"format": "at-identifier",
+						"description": "Organizer DID or handle; resolve handles to DIDs before filtering."
+					},
+					"cursor": {
+						"type": "string",
+						"maxLength": 4096,
+						"description": "Opaque continuation cursor. Reuse the same filters and limit; omit for the first page."
+					}
+				}
+			},
+			"description": "Search calendar titles and descriptions. All supplied filters are combined with AND. Order by relevance descending then URI ascending. Search matching and relevance ranking are implementation details; the cursor is bound to the query and filters."
+		}
+	},
+	"$type": "com.atproto.lexicon.schema",
+	"lexicon": 1
+}

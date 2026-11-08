@@ -1,0 +1,35 @@
+{
+	"id": "win.tomo-x.atventar.getProfile",
+	"defs": {
+		"main": {
+			"type": "query",
+			"errors": [
+				{
+					"name": "ActorNotFound",
+					"description": "The requested identity does not exist or cannot be resolved."
+				}
+			],
+			"output": {
+				"schema": {
+					"ref": "win.tomo-x.atventar.defs#profileView",
+					"type": "ref"
+				},
+				"encoding": "application/json"
+			},
+			"parameters": {
+				"type": "params",
+				"required": ["actor"],
+				"properties": {
+					"actor": {
+						"type": "string",
+						"format": "at-identifier",
+						"description": "DID or handle of the requested profile."
+					}
+				}
+			},
+			"description": "Resolve a DID or handle to the service profile. Profile source and storage are implementation details. Return a DID-only profile when the identity exists but display information is unavailable."
+		}
+	},
+	"$type": "com.atproto.lexicon.schema",
+	"lexicon": 1
+}
