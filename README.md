@@ -38,7 +38,7 @@ clientからAPIを呼ぶ際のプロキシ・CORS設定は、実際のAPI実装�
 - Biomeは**2.2.3固定**で、sharedのみ対象から除外しています。
 - appviewは`src/app.ts`にHonoアプリ、`src/index.ts`にNode.jsの起動処理を分けています。
   ルートを増やすときは`app.ts`から登録してください。業務ロジックやDBはまだありません。
-- appviewはルートの`tsconfig.base.json`を継承します。clientは既存のTypeScript設定を使います。
+- TypeScript設定はclient・appviewそれぞれのディレクトリ内で管理します。
 - 依存関係とlockfileはルートで管理します。追加例: `pnpm --filter @atventar/appview add <package>`。
 - CIではlockfile固定のインストール、`pnpm check`、`pnpm build`を実行します。
 - sharedの初期化は今回の開発・CIには不要です。必要な場合のみ`git submodule update --init shared`を実行します。
