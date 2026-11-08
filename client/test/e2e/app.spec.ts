@@ -130,7 +130,7 @@ test('joining a day preserves the requested route through the login gate', async
 	await page.goto(`${projectPath}/join?day=10`)
 	await expect(page).toHaveURL(/\/login\?returnTo=/)
 	await expect(page.getByRole('heading', { name: 'ログイン' })).toBeVisible()
-	await expect(page.getByRole('button', { name: 'AtPassportでログイン' })).toBeVisible()
+	await expect(page.getByRole('button', { name: '@passportでログイン' })).toBeVisible()
 	const url = new URL(page.url())
 	await expect(url.searchParams.get('returnTo')).toBe(`${projectPath}/join?day=10`)
 })

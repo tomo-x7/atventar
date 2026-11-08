@@ -37,7 +37,7 @@ export const LoginError: Story = {
 
 export const AtPassport: Story = {
 	play: async ({ canvasElement, args }) => {
-		await userEvent.click(within(canvasElement).getByRole('button', { name: 'AtPassportでログイン' }))
+		await userEvent.click(within(canvasElement).getByRole('button', { name: '@passportでログイン' }))
 		await expect(args.onAtPassport).toHaveBeenCalledOnce()
 	},
 }

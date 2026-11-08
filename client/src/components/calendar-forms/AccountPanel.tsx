@@ -1,3 +1,4 @@
+import { AtPassportIcon, AtPassportUI } from '@atpassport/client/ui'
 import { useId } from 'react'
 import '../theme.css'
 import styles from './CalendarForms.module.css'
@@ -14,13 +15,9 @@ export function AccountPanel({ onSignIn, onAtPassport, isSubmitting = false, err
 	return (
 		<section className={styles.root} aria-labelledby={`${id}-heading`} aria-busy={isSubmitting}>
 			<h1 id={`${id}-heading`}>ログイン</h1>
-			<button
-				className={`${styles.primary} ${styles.passport}`}
-				type="button"
-				disabled={isSubmitting}
-				onClick={onAtPassport}
-			>
-				AtPassportでログイン
+			<button className={styles.passport} type="button" disabled={isSubmitting} onClick={onAtPassport}>
+				<AtPassportIcon size={24} aria-hidden="true" />
+				{AtPassportUI.ja.title}
 			</button>
 			<form
 				className={styles.handleLogin}

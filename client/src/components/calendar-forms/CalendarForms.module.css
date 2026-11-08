@@ -110,9 +110,21 @@
 }
 
 .root button.passport {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
 	width: 100%;
 	min-height: 48px;
+	border-color: var(--at-color-atpassport);
+	background: var(--at-color-atpassport);
+	color: var(--at-color-base);
 	font-size: 16px;
+}
+
+.root button.passport:hover {
+	border-color: var(--at-color-atpassport-hover);
+	background: var(--at-color-atpassport-hover);
 }
 
 .handleLogin {
