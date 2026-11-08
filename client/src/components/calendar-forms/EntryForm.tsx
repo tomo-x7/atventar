@@ -19,8 +19,11 @@ export interface EntryFormProps {
 	initialValue?: Partial<EntryFormValue>
 	onSave?: (value: EntryFormValue) => void
 	onCancel?: () => void
+	onReload?: () => void
 	onWithdraw?: () => void
 	onShare?: () => void
+	onCheckIndex?: () => void
+	isCheckingIndex?: boolean
 	recordHref?: string
 	submissionState?: EntrySubmissionState
 	withdrawalState?: EntrySubmissionState
@@ -36,8 +39,11 @@ export function EntryForm({
 	initialValue,
 	onSave,
 	onCancel,
+	onReload,
 	onWithdraw,
 	onShare,
+	onCheckIndex,
+	isCheckingIndex = false,
 	recordHref,
 	submissionState = 'idle',
 	withdrawalState = 'idle',
@@ -164,9 +170,26 @@ export function EntryForm({
 						</button>
 					)}
 				</div>
-				{submissionState === 'error' && <p role="alert">{error ?? '参加登録を保存できませんでした。'}</p>}
+				{submissionState === 'error' && (
+					<>
+						<p role="alert">{error ?? '参加登録を保存できませんでした。'}</p>
+						{onReload && (
+							<button type="button" disabled={isSubmitting} onClick={onReload}>
+								最新の内容を読み込む
+							</button>
+						)}
+					</>
+				)}
 				{submissionState === 'awaiting-index' && (
-					<output>参加登録を保存しました。カレンダーへの反映を待っています。</output>
+					<>
+						<output>参加登録を保存しました。カレンダーへの反映を待っています。</output>
+						{error && <p role="alert">参加登録の保存は完了しています。反映状況を確認できません。{error}</p>}
+						{onCheckIndex && (
+							<button type="button" disabled={isCheckingIndex} onClick={onCheckIndex}>
+								{isCheckingIndex ? '確認中…' : '反映を確認'}
+							</button>
+						)}
+					</>
 				)}
 			</form>
 			{mode === 'edit' && onWithdraw && (
@@ -190,7 +213,17 @@ export function EntryForm({
 					)}
 					{withdrawalState === 'error' && <p role="alert">{withdrawalError ?? '参加登録を取り消せませんでした。'}</p>}
 					{withdrawalState === 'awaiting-index' && (
-						<output>参加取消を保存しました。カレンダーへの反映を待っています。</output>
+						<>
+							<output>参加取消を保存しました。カレンダーへの反映を待っています。</output>
+							{withdrawalError && (
+								<p role="alert">参加取消の保存は完了しています。反映状況を確認できません。{withdrawalError}</p>
+							)}
+							{onCheckIndex && (
+								<button type="button" disabled={isCheckingIndex} onClick={onCheckIndex}>
+									{isCheckingIndex ? '確認中…' : '反映を確認'}
+								</button>
+							)}
+						</>
 					)}
 				</div>
 			)}

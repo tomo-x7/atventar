@@ -1,4 +1,4 @@
-import { useId, useState } from 'react'
+import { useId } from 'react'
 import '../theme.css'
 import styles from './CalendarForms.module.css'
 
@@ -13,19 +13,29 @@ interface CalendarFormCommonProps {
 	currentYear: number
 	onSave?: (value: CalendarFormValue) => void
 	onCancel?: () => void
+	onReload?: () => void
 	isSubmitting?: boolean
 	error?: string
+	saved?: boolean
 }
 
 export type CalendarFormProps = CalendarFormCommonProps &
 	({ mode?: 'create'; initialValue?: Partial<CalendarFormValue> } | { mode: 'edit'; initialValue: CalendarFormValue })
 
 export function CalendarForm(props: CalendarFormProps) {
-	const { mode = 'create', initialValue, onSave, onCancel, isSubmitting = false, error } = props
+	const {
+		mode = 'create',
+		initialValue,
+		onSave,
+		onCancel,
+		onReload,
+		isSubmitting = false,
+		error,
+		saved = false,
+	} = props
 	const year = props.mode === 'edit' ? props.initialValue.year : props.currentYear
 
 	const id = useId()
-	const [saved, setSaved] = useState(false)
 	return (
 		<section className={styles.root} aria-labelledby={`${id}-heading`}>
 			<h1 id={`${id}-heading`}>
@@ -33,7 +43,6 @@ export function CalendarForm(props: CalendarFormProps) {
 			</h1>
 			<form
 				aria-busy={isSubmitting}
-				onChange={() => setSaved(false)}
 				onSubmit={(event) => {
 					event.preventDefault()
 					if (isSubmitting) return
@@ -43,7 +52,6 @@ export function CalendarForm(props: CalendarFormProps) {
 						year,
 						description: String(data.get('description')).trim(),
 					})
-					setSaved(true)
 				}}
 			>
 				<label htmlFor={`${id}-title`}>タイトル</label>
@@ -75,7 +83,16 @@ export function CalendarForm(props: CalendarFormProps) {
 						</button>
 					)}
 				</div>
-				{error && <p role="alert">{error}</p>}
+				{error && (
+					<>
+						<p role="alert">{error}</p>
+						{onReload && (
+							<button type="button" disabled={isSubmitting} onClick={onReload}>
+								最新の内容を読み込む
+							</button>
+						)}
+					</>
+				)}
 				{saved && !error && !isSubmitting && (
 					<output>{mode === 'create' ? 'カレンダーを作成しました' : '変更を保存しました'}</output>
 				)}

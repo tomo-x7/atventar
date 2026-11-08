@@ -9,9 +9,11 @@ export function ServiceShell({
 	user,
 	active = 'calendars',
 	onNavigate,
+	onSignOut,
 }: {
 	children: ReactNode
 	user?: string
+	onSignOut?: () => void
 	active?: ServiceDestination
 	onNavigate: (destination: ServiceDestination) => void
 }) {
@@ -46,6 +48,11 @@ export function ServiceShell({
 				<button className={styles.account} type="button" onClick={() => onNavigate(user ? 'profile' : 'login')}>
 					{user ?? 'ログイン'}
 				</button>
+				{user && onSignOut && (
+					<button type="button" onClick={onSignOut}>
+						ログアウト
+					</button>
+				)}
 			</header>
 			<div id={id} tabIndex={-1}>
 				{children}
@@ -110,6 +117,32 @@ export function ServiceState({ state, onRetry }: { state: 'loading' | 'error' | 
 						</button>
 					)}
 				</>
+			)}
+		</section>
+	)
+}
+
+export function ContentLayout({ children }: { children: ReactNode }) {
+	return <div className={styles.page}>{children}</div>
+}
+
+export function PageMessage({
+	title,
+	children,
+	onRetry,
+}: {
+	title: string
+	children?: ReactNode
+	onRetry?: () => void
+}) {
+	return (
+		<section className={`${styles.page} ${styles.state}`}>
+			<h1>{title}</h1>
+			{children}
+			{onRetry && (
+				<button type="button" onClick={onRetry}>
+					再試行
+				</button>
 			)}
 		</section>
 	)

@@ -18,11 +18,13 @@ type Story = StoryObj<typeof meta>
 export const Guest: Story = { name: '未ログイン' }
 export const LoggedIn: Story = {
 	name: 'ログイン済み',
-	args: { user: 'mori' },
+	args: { user: 'mori', onSignOut: fn() },
 	play: async ({ canvasElement, args }) => {
 		const canvas = within(canvasElement)
 		await userEvent.click(canvas.getByRole('button', { name: /^mori$/ }))
 		await expect(args.onNavigate).toHaveBeenCalledWith('profile')
+		await userEvent.click(canvas.getByRole('button', { name: 'ログアウト' }))
+		await expect(args.onSignOut).toHaveBeenCalledOnce()
 	},
 }
 export const Help: Story = {

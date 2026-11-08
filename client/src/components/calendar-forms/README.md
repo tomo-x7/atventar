@@ -3,7 +3,7 @@
 カレンダー作成・編集、参加・記事登録、ログインを Storybook 内で独立して確認する UI です。
 ルーティング、認証、API、永続化は実装していません。
 
-CalendarForm の `currentYear` はサーバーの権威時刻から渡す必須値です。新規作成はこの年を使用し、編集は `initialValue.year` を保持します。年と枚数の入力はありません。カレンダー全体削除の UI もありません。CalendarForm の保存表示は Storybook 用のローカル状態で、接続時には実際の保存結果と連動させてください。
+CalendarForm の `currentYear` はサーバーの権威時刻から渡す必須値です。新規作成はこの年を使用し、編集は `initialValue.year` を保持します。年と枚数の入力はありません。カレンダー全体削除の UI もありません。CalendarForm の保存表示は呼び出し元の `saved` で制御します。`onSave` 呼び出し直後には成功を表示しません。Storybook の Create story のみ wrapper がローカルで成功状態を渡します。
 
 EntryForm は企画と担当日（1〜25日）に対して参加を登録します。参加データにカレンダーの枚番号はありません。`day` は任意の初期選択で、未指定時は1日です。`onSave` は `day`、`title`、`url`、`comment` を渡します。「書く内容」は参加時から公開する必須タイトルで、記事 URL は未入力でも登録できます。
 
@@ -20,3 +20,7 @@ EntryForm の `submissionState` は呼び出し元で制御します。コール
 本人用の参加取消も `withdrawalState`（同じ5状態）と `withdrawalError` で制御します。`onWithdraw` 呼び出し直後に成功を表示しません。参加取消は主催者による参加者操作には使用しません。
 
 `Join` story は wrapper のローカル状態だけで、送信→反映待ち→完了を再現します。反映完了は play から制御し、タイマーや開発用の追加ボタンは使いません。各状態は独立した story でも確認できます。
+
+反映待ちの EntryForm に `onCheckIndex` を渡すと「反映を確認」を表示します。`isCheckingIndex` 中は確認ボタンを無効にします。送信ボタンは反映待ちの間ずっと無効です。反映確認に失敗した場合は `error`（取消時は `withdrawalError`）を渡し、PDS 保存済みの表示を維持します。
+
+IndexingResult はカレンダー保存後の保存済み・反映待ち・反映完了を表示します。`pending`、`isChecking`、`error` は呼び出し元の状態です。企画名と任意の日付、永続リンク、確認・共有操作を受け取り、枚番号は表示しません。確認エラーを保存失敗として扱わず、保存済みと明示します。

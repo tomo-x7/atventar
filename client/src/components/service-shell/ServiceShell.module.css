@@ -56,6 +56,13 @@
 	color: var(--at-color-main);
 }
 .account {
+	max-width: min(45vw, 240px);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	min-width: 0;
+	overflow-wrap: anywhere;
+	text-align: right;
 	margin-left: auto;
 }
 .footer {
@@ -131,4 +138,9 @@
 	.footer {
 		margin-inline: 12px;
 	}
+}
+
+.page a {
+	color: var(--at-color-main);
+	text-underline-offset: 3px;
 }

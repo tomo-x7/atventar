@@ -1,6 +1,23 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { useState } from 'react'
 import { expect, fn, userEvent, within } from 'storybook/test'
-import { CalendarForm } from './CalendarForm'
+import { CalendarForm, type CalendarFormProps } from './CalendarForm'
+
+function CalendarDemo(props: CalendarFormProps) {
+	const [saved, setSaved] = useState(false)
+	return (
+		<div onChange={() => setSaved(false)}>
+			<CalendarForm
+				{...props}
+				saved={saved}
+				onSave={(value) => {
+					props.onSave?.(value)
+					setSaved(true)
+				}}
+			/>
+		</div>
+	)
+}
 
 const meta = {
 	title: 'Forms/Calendar',
@@ -13,6 +30,7 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Create: Story = {
+	render: (args) => <CalendarDemo {...args} />,
 	play: async ({ canvasElement, args }) => {
 		const canvas = within(canvasElement)
 		await userEvent.type(canvas.getByLabelText('タイトル'), 'ものづくり Advent Calendar')
@@ -71,5 +89,24 @@ export const EditPastYear: Story = {
 		await expect(canvas.getByRole('heading', { name: '2025年のカレンダーを編集' })).toBeVisible()
 		await userEvent.click(canvas.getByRole('button', { name: '保存する' }))
 		await expect(args.onSave).toHaveBeenCalledWith({ title: 'ものづくり', year: 2025, description: '' })
+	},
+}
+
+export const SubmittedWithoutConfirmation: Story = {
+	play: async ({ canvasElement, args }) => {
+		const canvas = within(canvasElement)
+		await userEvent.type(canvas.getByLabelText('タイトル'), 'ものづくり')
+		await userEvent.click(canvas.getByRole('button', { name: '作成する' }))
+		await expect(args.onSave).toHaveBeenCalledOnce()
+		await expect(canvas.queryByRole('status')).not.toBeInTheDocument()
+	},
+}
+
+export const Conflict: Story = {
+	args: { ...Edit.args, error: 'ほかの場所で変更されています。', onReload: fn() },
+	play: async ({ canvasElement, args }) => {
+		await userEvent.click(within(canvasElement).getByRole('button', { name: '最新の内容を読み込む' }))
+		await expect(args.onReload).toHaveBeenCalledOnce()
+		await expect(args.onSave).not.toHaveBeenCalled()
 	},
 }

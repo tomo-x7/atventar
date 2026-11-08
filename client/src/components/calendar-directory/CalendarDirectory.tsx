@@ -8,7 +8,7 @@ export interface CalendarSummary {
 	year: number
 	owner: string
 	participants: number
-	sheets: number
+	sheets?: number
 	createdAt: string
 }
 
@@ -20,6 +20,8 @@ export interface ArticleSummary {
 	url: string
 }
 
+export type ProfileTab = 'joined' | 'hosted' | 'articles'
+
 type CalendarSelect = (calendar: CalendarSummary) => void
 
 export function CalendarRows({
@@ -29,16 +31,17 @@ export function CalendarRows({
 	calendars: CalendarSummary[]
 	onCalendarSelect?: CalendarSelect
 }) {
+	const showSheets = calendars.some((calendar) => calendar.sheets !== undefined)
 	return (
 		<div className={styles.tableScroll}>
-			<table className={styles.table}>
+			<table className={styles.table} data-show-sheets={showSheets}>
 				<thead>
 					<tr>
 						<th scope="col">カレンダー</th>
 						<th scope="col">年</th>
 						<th scope="col">主催</th>
 						<th scope="col">参加登録</th>
-						<th scope="col">枚数</th>
+						{showSheets && <th scope="col">枚数</th>}
 					</tr>
 				</thead>
 				<tbody>
@@ -56,7 +59,9 @@ export function CalendarRows({
 							<td className={styles.numeric}>{calendar.year}年</td>
 							<td>@{calendar.owner}</td>
 							<td className={styles.numeric}>{calendar.participants}件</td>
-							<td className={styles.numeric}>{calendar.sheets}枚</td>
+							{showSheets && (
+								<td className={styles.numeric}>{calendar.sheets === undefined ? '—' : `${calendar.sheets}枚`}</td>
+							)}
 						</tr>
 					))}
 				</tbody>
@@ -184,25 +189,42 @@ export function CalendarDirectory({
 
 export function UserCalendarPage({
 	name,
+	avatarUrl,
 	joined,
 	hosted,
 	articles,
 	onCalendarSelect,
+	tab: controlledTab,
+	onTabChange,
+	counts,
+	hasMore = false,
+	onLoadMore,
+	isLoading = false,
+	error,
 }: {
 	name: string
+	avatarUrl?: string
 	joined: CalendarSummary[]
 	hosted: CalendarSummary[]
 	articles: ArticleSummary[]
 	onCalendarSelect?: CalendarSelect
+	tab?: ProfileTab
+	onTabChange?: (tab: ProfileTab) => void
+	counts?: Record<ProfileTab, number>
+	hasMore?: boolean
+	onLoadMore?: (tab: ProfileTab) => void
+	isLoading?: boolean
+	error?: string
 }) {
 	const id = useId()
-	const [tab, setTab] = useState<'joined' | 'hosted' | 'articles'>('joined')
+	const [localTab, setTab] = useState<ProfileTab>('joined')
+	const tab = controlledTab ?? localTab
 	return (
 		<section className={styles.root} aria-labelledby={`${id}-title`}>
 			<header className={styles.heading}>
 				<div className={styles.profile}>
 					<span className={styles.avatar} aria-hidden="true">
-						{name.slice(0, 1)}
+						{avatarUrl ? <img src={avatarUrl} alt="" width={44} height={44} /> : Array.from(name)[0]}
 					</span>
 					<h1 id={`${id}-title`}>{name}</h1>
 				</div>
@@ -210,12 +232,20 @@ export function UserCalendarPage({
 			<fieldset className={styles.tabs} aria-label="表示内容">
 				{(
 					[
-						{ key: 'joined', label: '参加', count: joined.length },
-						{ key: 'hosted', label: '主催', count: hosted.length },
-						{ key: 'articles', label: '記事', count: articles.length },
+						{ key: 'joined', label: '参加', count: counts?.joined ?? joined.length },
+						{ key: 'hosted', label: '主催', count: counts?.hosted ?? hosted.length },
+						{ key: 'articles', label: '記事', count: counts?.articles ?? articles.length },
 					] as const
 				).map((item) => (
-					<button key={item.key} type="button" aria-pressed={tab === item.key} onClick={() => setTab(item.key)}>
+					<button
+						key={item.key}
+						type="button"
+						aria-pressed={tab === item.key}
+						onClick={() => {
+							if (controlledTab === undefined) setTab(item.key)
+							onTabChange?.(item.key)
+						}}
+					>
 						{item.label} {item.count}
 					</button>
 				))}
@@ -235,12 +265,19 @@ export function UserCalendarPage({
 						))}
 					</ul>
 				) : (
-					<p className={styles.empty}>記事はありません</p>
+					!isLoading && !error && <p className={styles.empty}>記事はありません</p>
 				)
 			) : (tab === 'joined' ? joined : hosted).length ? (
 				<CalendarRows calendars={tab === 'joined' ? joined : hosted} onCalendarSelect={onCalendarSelect} />
 			) : (
-				<p className={styles.empty}>カレンダーはありません</p>
+				!isLoading && !error && <p className={styles.empty}>カレンダーはありません</p>
+			)}
+			{error && <p role="alert">{error}</p>}
+			{isLoading && <output>読み込み中…</output>}
+			{onLoadMore && (hasMore || error) && (
+				<button className={styles.more} type="button" disabled={isLoading} onClick={() => onLoadMore(tab)}>
+					{isLoading ? '読み込み中…' : error ? '再試行' : 'もっと見る'}
+				</button>
 			)}
 		</section>
 	)

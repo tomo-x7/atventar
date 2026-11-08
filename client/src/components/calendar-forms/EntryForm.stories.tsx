@@ -158,7 +158,13 @@ export const Saving: Story = {
 }
 
 export const AwaitingIndex: Story = {
-	args: { submissionState: 'awaiting-index', initialValue: { title: 'CSSについて書きます' } },
+	args: { submissionState: 'awaiting-index', initialValue: { title: 'CSSについて書きます' }, onCheckIndex: fn() },
+	play: async ({ canvasElement, args }) => {
+		const canvas = within(canvasElement)
+		await userEvent.click(canvas.getByRole('button', { name: '反映を確認' }))
+		await expect(args.onCheckIndex).toHaveBeenCalledOnce()
+		await expect(canvas.getByRole('button', { name: '反映待ち' })).toBeDisabled()
+	},
 }
 
 export const Complete: Story = {
@@ -180,9 +186,35 @@ export const RegistrationError: Story = {
 }
 
 export const WithdrawalAwaitingIndex: Story = {
-	args: { ...EditArticle.args, withdrawalState: 'awaiting-index' },
+	args: { ...EditArticle.args, withdrawalState: 'awaiting-index', onCheckIndex: fn() },
+	play: async ({ canvasElement, args }) => {
+		const canvas = within(canvasElement)
+		await userEvent.click(canvas.getByRole('button', { name: '反映を確認' }))
+		await expect(args.onCheckIndex).toHaveBeenCalledOnce()
+		await expect(args.onWithdraw).not.toHaveBeenCalled()
+	},
 }
 
 export const WithdrawalError: Story = {
 	args: { ...EditArticle.args, withdrawalState: 'error', withdrawalError: '参加登録を取り消せませんでした。' },
+}
+
+export const CheckingIndex: Story = {
+	args: { submissionState: 'awaiting-index', onCheckIndex: fn(), isCheckingIndex: true },
+	play: async ({ canvasElement }) => {
+		await expect(within(canvasElement).getByRole('button', { name: '確認中…' })).toBeDisabled()
+	},
+}
+
+export const IndexCheckError: Story = {
+	args: { submissionState: 'awaiting-index', onCheckIndex: fn(), error: '接続を確認して再試行してください。' },
+}
+
+export const Conflict: Story = {
+	args: { ...EditArticle.args, submissionState: 'error', error: 'ほかの場所で変更されています。', onReload: fn() },
+	play: async ({ canvasElement, args }) => {
+		await userEvent.click(within(canvasElement).getByRole('button', { name: '最新の内容を読み込む' }))
+		await expect(args.onReload).toHaveBeenCalledOnce()
+		await expect(args.onSave).not.toHaveBeenCalled()
+	},
 }

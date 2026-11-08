@@ -18,6 +18,7 @@ export {
 	type CalendarSummary,
 	UserCalendarPage,
 } from './calendar-directory/CalendarDirectory'
+export { RemoteCalendarDirectory, YearNavigation } from './calendar-directory/RemoteCalendarDirectory'
 export { AccountPanel, type AccountPanelProps } from './calendar-forms/AccountPanel'
 export { CalendarForm, type CalendarFormProps, type CalendarFormValue } from './calendar-forms/CalendarForm'
 export {
@@ -26,10 +27,18 @@ export {
 	type EntryFormValue,
 	type EntrySubmissionState,
 } from './calendar-forms/EntryForm'
+export { IndexingResult, type IndexingResultProps } from './calendar-forms/IndexingResult'
 export {
 	buildProjectShare,
 	ProjectShare,
 	type ProjectSharePayload,
 	type ProjectShareProps,
 } from './calendar-share/ProjectShare'
-export { type ServiceDestination, ServiceHelp, ServiceShell, ServiceState } from './service-shell/ServiceShell'
+export {
+	ContentLayout,
+	PageMessage,
+	type ServiceDestination,
+	ServiceHelp,
+	ServiceShell,
+	ServiceState,
+} from './service-shell/ServiceShell'
