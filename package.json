@@ -26,7 +26,7 @@
 		"db:migrate:remote": "wrangler d1 migrations apply DB --remote",
 		"dev:ingester": "pnpm --filter @atventar/ingester dev",
 		"build:ingester": "pnpm --filter @atventar/ingester build",
-		"test": "pnpm --filter @atventar/appview test && pnpm --filter @atventar/ingester test"
+		"test": "pnpm --filter @atventar/appview test && pnpm --filter @atventar/ingester test && pnpm --filter client test"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.2.3"

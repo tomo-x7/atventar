@@ -6,6 +6,7 @@ import { ApiError } from './errors.js'
 import { ingest } from './ingest.js'
 import { createServer } from './lexicons/index.js'
 import { Profiles } from './profiles.js'
+import { oauthClientMetadata, serverInfo } from './public-info.js'
 import { Service } from './service.js'
 
 export const app = new Hono<Env>()
@@ -37,7 +38,14 @@ server.win.tomoX.atventar.listCalendars(({ c, params }) => query(() => service(c
 server.win.tomoX.atventar.searchCalendars(({ c, params }) => query(() => service(c.env.DB).listCalendars(params)))
 server.win.tomoX.atventar.getActorEntries(({ c, params }) => query(() => service(c.env.DB).actorEntries(params)))
 
-app.get('/health', (c) => c.json({ status: 'ok' }))
+app.get('/health', (c) => {
+	c.header('Cache-Control', 'no-store')
+	return c.json(serverInfo())
+})
+app.get('/oauth-client-metadata.json', (c) => {
+	c.header('Cache-Control', 'public, max-age=3600')
+	return c.json(oauthClientMetadata(c.req.url))
+})
 app.route('/ingest', ingest)
 app.route('/', server.xrpc.createApp())
 app.onError((error, c) => {
