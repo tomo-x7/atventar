@@ -1,9 +1,9 @@
 .ac-root,
 .ac-sheet {
-	--ac-ink: #302922;
+	--ac-ink: #252525;
 	--ac-accent: #a13c2a;
-	--ac-muted: #71675c;
-	--ac-line: #ded5c8;
+	--ac-muted: #666;
+	--ac-line: #d9d9d9;
 	font:
 		0.875rem / 1.6 -apple-system,
 		BlinkMacSystemFont,
@@ -11,7 +11,7 @@
 		"Noto Sans JP",
 		sans-serif;
 	color: var(--ac-ink);
-	background: #fffdf8;
+	background: #fff;
 	box-sizing: border-box;
 }
 .ac-root *,
@@ -96,14 +96,14 @@
 	align-items: center;
 	justify-content: center;
 	border: 1px solid var(--ac-line);
-	background: #fffdf8;
+	background: #fff;
 	color: var(--ac-ink);
 	padding: 7px 14px;
 	min-height: 40px;
 	text-decoration: none;
 }
 .ac-button:hover {
-	background: #f4ede2;
+	background: #f2f2f2;
 }
 .ac-root .ac-button-primary {
 	color: white;
@@ -161,7 +161,7 @@
 	font-size: 0.6875rem;
 }
 .ac-card-days li[data-filled="false"] {
-	background: #f8f3eb;
+	background: #f7f7f7;
 }
 .ac-avatar {
 	display: inline-flex;
@@ -170,7 +170,7 @@
 	justify-content: center;
 	width: 32px;
 	height: 32px;
-	background: #efe7dc;
+	background: #eee;
 	color: var(--ac-ink);
 	font-size: 0.875rem;
 	line-height: 1;
@@ -267,12 +267,12 @@
 	height: 100%;
 	width: 100%;
 	border: 1px solid var(--ac-line);
-	background: #fffdf8;
+	background: #fff;
 	text-decoration: none;
 	overflow-wrap: anywhere;
 }
 .ac-month-days a:hover {
-	background: #f8f3eb;
+	background: #f7f7f7;
 }
 .ac-month-days a[aria-current="date"] {
 	border-bottom: 3px solid var(--ac-accent);
@@ -281,7 +281,7 @@
 .ac-month-days a[data-selected="true"] {
 	outline: 2px solid var(--ac-accent);
 	outline-offset: -2px;
-	background: #efe7dc;
+	background: #eee;
 }
 .ac-calendar-date {
 	font-size: 1rem;
@@ -317,7 +317,7 @@
 	scroll-margin-block: 20px;
 }
 .ac-day[data-selected="true"] {
-	background: #f8f3eb;
+	background: #f7f7f7;
 }
 .ac-day time {
 	font-size: 1.375rem;

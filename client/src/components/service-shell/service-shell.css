@@ -6,8 +6,8 @@
 		"Segoe UI",
 		"Noto Sans JP",
 		sans-serif;
-	color: #302922;
-	background: #fffdf8;
+	color: #252525;
+	background: #fff;
 }
 .service-ui * {
 	box-sizing: border-box;
@@ -30,7 +30,7 @@
 	gap: 32px;
 	min-height: 66px;
 	padding: 0 32px;
-	border-bottom: 1px solid #ded5c8;
+	border-bottom: 1px solid #d9d9d9;
 }
 .service-header button,
 .service-footer button {
@@ -58,7 +58,7 @@
 	margin-left: auto;
 }
 .service-footer {
-	border-top: 1px solid #ded5c8;
+	border-top: 1px solid #d9d9d9;
 	margin: 32px 32px 0;
 	padding: 12px 0;
 	display: flex;
@@ -76,11 +76,11 @@
 	font-weight: 650;
 }
 .service-page details {
-	border-top: 1px solid #ded5c8;
+	border-top: 1px solid #d9d9d9;
 	padding: 16px 0;
 }
 .service-page details:last-child {
-	border-bottom: 1px solid #ded5c8;
+	border-bottom: 1px solid #d9d9d9;
 }
 .service-page summary {
 	cursor: pointer;
@@ -97,16 +97,16 @@
 	justify-content: center;
 }
 .service-state button {
-	border: 1px solid #ded5c8;
+	border: 1px solid #d9d9d9;
 	padding: 8px 16px;
-	background: #fffdf8;
+	background: #fff;
 }
 .service-skip {
 	position: absolute;
 	left: 16px;
 	top: -100px;
 	color: #a13c2a;
-	background: #fffdf8;
+	background: #fff;
 	padding: 8px;
 	z-index: 2;
 }
