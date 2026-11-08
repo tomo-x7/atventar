@@ -1,7 +1,10 @@
 import { useId, useState } from 'react'
 import './calendar-forms.css'
 
+export type EntrySubmissionState = 'idle' | 'submitting' | 'awaiting-index' | 'complete' | 'error'
+
 export interface EntryFormValue {
+	day: number
 	title: string
 	url: string
 	comment: string
@@ -9,21 +12,23 @@ export interface EntryFormValue {
 
 export interface EntryFormProps {
 	calendarTitle: string
-	sheet?: number
-	day: number
+	day?: number
 	participant: string
 	mode?: 'join' | 'edit'
 	initialValue?: Partial<EntryFormValue>
 	onSave?: (value: EntryFormValue) => void
 	onCancel?: () => void
 	onWithdraw?: () => void
-	isSubmitting?: boolean
+	onShare?: () => void
+	recordHref?: string
+	submissionState?: EntrySubmissionState
+	withdrawalState?: EntrySubmissionState
 	error?: string
+	withdrawalError?: string
 }
 
 export function EntryForm({
 	calendarTitle,
-	sheet,
 	day,
 	participant,
 	mode = 'join',
@@ -31,34 +36,60 @@ export function EntryForm({
 	onSave,
 	onCancel,
 	onWithdraw,
-	isSubmitting = false,
+	onShare,
+	recordHref,
+	submissionState = 'idle',
+	withdrawalState = 'idle',
 	error,
+	withdrawalError,
 }: EntryFormProps) {
 	const id = useId()
-	const [saved, setSaved] = useState(false)
+	const initialDay = day ?? initialValue?.day ?? 1
+	const registeredDay = Number.isInteger(initialDay) && initialDay >= 1 && initialDay <= 25 ? initialDay : 1
+	const [selectedDay, setSelectedDay] = useState(registeredDay)
 	const [confirmWithdraw, setConfirmWithdraw] = useState(false)
-	const [withdrawn, setWithdrawn] = useState(false)
+	const isSubmitting = submissionState === 'submitting' || withdrawalState === 'submitting'
+	const awaitingIndex = submissionState === 'awaiting-index' || withdrawalState === 'awaiting-index'
+	const disabled = isSubmitting || awaitingIndex
+	const safeRecordHref = recordHref && /^(https?:\/\/|\/(?!\/))/i.test(recordHref) ? recordHref : undefined
 
-	if (withdrawn)
+	if (withdrawalState === 'complete') {
 		return (
-			<div className="calendar-form-ui">
-				<output>参加登録を取り消しました</output>
-			</div>
+			<section className="calendar-form-ui" aria-labelledby={`${id}-heading`}>
+				<h1 id={`${id}-heading`}>参加を取り消しました</h1>
+				<output>
+					{calendarTitle} · 12月{registeredDay}日の参加登録を取り消しました。
+				</output>
+			</section>
 		)
+	}
+
+	if (submissionState === 'complete') {
+		return (
+			<section className="calendar-form-ui" aria-labelledby={`${id}-heading`}>
+				<h1 id={`${id}-heading`}>{mode === 'join' ? '参加を登録しました' : '記事を保存しました'}</h1>
+				<output>
+					{calendarTitle} · 12月{selectedDay}日
+				</output>
+				<div className="calendar-form-ui__actions calendar-form-ui__completion-actions">
+					{safeRecordHref && <a href={safeRecordHref}>登録内容を見る</a>}
+					{onShare && (
+						<button type="button" onClick={onShare}>
+							共有する
+						</button>
+					)}
+				</div>
+			</section>
+		)
+	}
 
 	return (
 		<section className="calendar-form-ui" aria-labelledby={`${id}-heading`}>
 			<h1 id={`${id}-heading`}>{mode === 'join' ? '参加する' : '記事を編集'}</h1>
 			<dl className="calendar-form-ui__details">
 				<div>
-					<dt>カレンダー</dt>
+					<dt>企画</dt>
 					<dd>{calendarTitle}</dd>
-				</div>
-				<div>
-					<dt>日付</dt>
-					<dd>
-						{mode === 'edit' && sheet ? `カレンダー ${sheet} · ` : ''}12月{day}日
-					</dd>
 				</div>
 				<div>
 					<dt>参加者</dt>
@@ -67,22 +98,36 @@ export function EntryForm({
 			</dl>
 			<form
 				aria-busy={isSubmitting}
-				onChange={() => setSaved(false)}
 				onSubmit={(event) => {
 					event.preventDefault()
-					if (isSubmitting) return
+					if (disabled) return
 					const data = new FormData(event.currentTarget)
 					onSave?.({
+						day: selectedDay,
 						title: String(data.get('title')).trim(),
 						url: String(data.get('url')).trim(),
 						comment: String(data.get('comment')).trim(),
 					})
-					setSaved(true)
 				}}
 			>
+				<label htmlFor={`${id}-day`}>担当日</label>
+				<select
+					id={`${id}-day`}
+					name="day"
+					required
+					value={selectedDay}
+					disabled={disabled}
+					onChange={(event) => setSelectedDay(Number(event.currentTarget.value))}
+				>
+					{Array.from({ length: 25 }, (_, index) => index + 1).map((date) => (
+						<option key={date} value={date}>
+							12月{date}日
+						</option>
+					))}
+				</select>
 				<label htmlFor={`${id}-title`}>書く内容</label>
 				<input
-					disabled={isSubmitting}
+					disabled={disabled}
 					id={`${id}-title`}
 					name="title"
 					required
@@ -92,7 +137,7 @@ export function EntryForm({
 				/>
 				<label htmlFor={`${id}-url`}>記事URL</label>
 				<input
-					disabled={isSubmitting}
+					disabled={disabled}
 					id={`${id}-url`}
 					name="url"
 					type="url"
@@ -101,7 +146,7 @@ export function EntryForm({
 				/>
 				<label htmlFor={`${id}-comment`}>コメント</label>
 				<textarea
-					disabled={isSubmitting}
+					disabled={disabled}
 					id={`${id}-comment`}
 					name="comment"
 					rows={4}
@@ -109,45 +154,42 @@ export function EntryForm({
 					defaultValue={initialValue?.comment ?? ''}
 				/>
 				<div className="calendar-form-ui__actions">
-					<button className="calendar-form-ui__primary" type="submit" disabled={isSubmitting}>
-						{isSubmitting ? '保存中…' : mode === 'join' ? '参加を登録' : '保存する'}
+					<button className="calendar-form-ui__primary" type="submit" disabled={disabled}>
+						{isSubmitting ? '保存中…' : awaitingIndex ? '反映待ち' : mode === 'join' ? '参加を登録' : '保存する'}
 					</button>
 					{onCancel && (
-						<button type="button" disabled={isSubmitting} onClick={onCancel}>
+						<button type="button" disabled={disabled} onClick={onCancel}>
 							キャンセル
 						</button>
 					)}
 				</div>
-				{error && <p role="alert">{error}</p>}
-				{saved && !error && !isSubmitting && (
-					<output>{mode === 'join' ? '参加を登録しました' : '記事を保存しました'}</output>
+				{submissionState === 'error' && <p role="alert">{error ?? '参加登録を保存できませんでした。'}</p>}
+				{submissionState === 'awaiting-index' && (
+					<output>参加登録を保存しました。カレンダーへの反映を待っています。</output>
 				)}
 			</form>
 			{mode === 'edit' && onWithdraw && (
 				<div className="calendar-form-ui__danger-zone">
 					{confirmWithdraw ? (
 						<div role="alertdialog" aria-labelledby={`${id}-withdraw`}>
-							<h2 id={`${id}-withdraw`}>12月{day}日の参加登録を取り消しますか？</h2>
+							<h2 id={`${id}-withdraw`}>12月{registeredDay}日の参加登録を取り消しますか？</h2>
 							<div className="calendar-form-ui__actions">
-								<button
-									type="button"
-									disabled={isSubmitting}
-									onClick={() => {
-										onWithdraw()
-										setWithdrawn(true)
-									}}
-								>
+								<button type="button" disabled={disabled} onClick={onWithdraw}>
 									参加を取り消す
 								</button>
-								<button type="button" disabled={isSubmitting} onClick={() => setConfirmWithdraw(false)}>
+								<button type="button" disabled={disabled} onClick={() => setConfirmWithdraw(false)}>
 									戻る
 								</button>
 							</div>
 						</div>
 					) : (
-						<button type="button" disabled={isSubmitting} onClick={() => setConfirmWithdraw(true)}>
+						<button type="button" disabled={disabled} onClick={() => setConfirmWithdraw(true)}>
 							参加登録を取り消す
 						</button>
+					)}
+					{withdrawalState === 'error' && <p role="alert">{withdrawalError ?? '参加登録を取り消せませんでした。'}</p>}
+					{withdrawalState === 'awaiting-index' && (
+						<output>参加取消を保存しました。カレンダーへの反映を待っています。</output>
 					)}
 				</div>
 			)}

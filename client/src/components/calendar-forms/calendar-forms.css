@@ -42,7 +42,8 @@
 }
 
 .calendar-form-ui input,
-.calendar-form-ui textarea {
+.calendar-form-ui textarea,
+.calendar-form-ui select {
 	display: block;
 	width: 100%;
 	margin: 0 0 20px;
@@ -134,7 +135,8 @@
 	overflow-wrap: anywhere;
 }
 
-.calendar-form-ui [role="status"] {
+.calendar-form-ui output {
+	display: block;
 	margin: 16px 0 0;
 	color: #252525;
 }
@@ -143,4 +145,14 @@
 	.calendar-form-ui {
 		padding: 20px 16px;
 	}
+}
+
+.calendar-form-ui__completion-actions {
+	margin-top: 24px;
+	align-items: center;
+}
+
+.calendar-form-ui a {
+	color: #252525;
+	text-underline-offset: 3px;
 }
