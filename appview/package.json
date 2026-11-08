@@ -4,19 +4,28 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"dev": "tsx watch --env-file-if-exists=.env src/index.ts",
-		"build": "tsc -p tsconfig.build.json",
+		"lexgen": "gen-xrpc-hono --yes src/lexicons ../lexicons/*/*/*/*.json",
+		"dev": "wrangler dev --config ../wrangler.jsonc",
+		"build": "wrangler deploy --config ../wrangler.jsonc --dry-run --outdir dist",
 		"typecheck": "tsc --noEmit",
-		"start": "node --env-file-if-exists=.env dist/index.js"
+		"start": "wrangler dev --config ../wrangler.jsonc",
+		"test": "tsx --test test/*.test.ts",
+		"db:generate": "drizzle-kit generate"
 	},
 	"dependencies": {
+		"@atproto/lexicon": "^0.7.19",
 		"@evex-dev/xrpc-hono": "^2.1.1",
-		"@hono/node-server": "^2.1.6",
-		"hono": "^4.13.16"
+		"drizzle-orm": "^0.45.4",
+		"hono": "^4.13.16",
+		"multiformats": "^14.0.5"
 	},
 	"devDependencies": {
+		"@cloudflare/workers-types": "^5.20261107.1",
 		"@types/node": "^24.19.2",
+		"drizzle-kit": "^0.31.11",
 		"tsx": "^4.23.15",
-		"typescript": "~7.0.2"
+		"typescript": "~7.0.2",
+		"wrangler": "^4.158.0",
+		"miniflare": "^4.20260730.0"
 	}
 }
