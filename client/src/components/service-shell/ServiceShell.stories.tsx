@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect, fn, userEvent, within } from 'storybook/test'
 import { CalendarCollection } from '../advent-calendar/AdventCalendar'
-import { sampleSheets } from '../advent-calendar/fixtures'
+import { projectProps } from '../advent-calendar/fixtures'
 import { ServiceHelp, ServiceShell, ServiceState } from './ServiceShell'
 
 const meta = {
@@ -10,16 +10,7 @@ const meta = {
 	parameters: { layout: 'fullscreen' },
 	args: {
 		onNavigate: fn(),
-		children: (
-			<CalendarCollection
-				year={2026}
-				title="ものづくりとWeb"
-				description="Webの技術、デザイン、日々の制作について書くカレンダーです。"
-				organizer="mori"
-				sheets={sampleSheets}
-				onJoin={fn()}
-			/>
-		),
+		children: <CalendarCollection {...projectProps} onJoin={fn()} onShare={fn()} />,
 	},
 } satisfies Meta<typeof ServiceShell>
 export default meta
@@ -42,7 +33,7 @@ export const Help: Story = {
 		await userEvent.click(canvas.getByText('同じ日に参加者がいる場合は？'))
 		await expect(
 			canvas.getByText(
-				'そのまま参加できます。埋まっている日への参加は追加のカレンダーに登録されます。カレンダーの追加と連番は自動です。',
+				'企画と日付を選んで参加できます。カレンダーの追加・配置は自動で決まり、表示中のカレンダーに配置されるとは限りません。',
 			),
 		).toBeVisible()
 	},

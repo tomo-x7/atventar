@@ -1,4 +1,4 @@
-import type { CalendarEntry, CalendarSheet } from './AdventCalendar'
+import type { CalendarCollectionProps, CalendarEntry, CalendarSheet } from './AdventCalendar'
 
 const authors = ['mori', '佐藤 はる', 'natsuki', '小林', 'yuki', '田中', 'aki']
 // Local sample identicons keep Storybook independent of external avatar hosts.
@@ -40,8 +40,10 @@ export function makeSheet(id: string, number: number, count: number): CalendarSh
 		entries: Array.from(
 			{ length: Math.min(25, Math.max(0, count)) },
 			(_, index): CalendarEntry => ({
+				uri: `at://did:plc:sample${index % authors.length}/org.atventar.participation/${id}-${index + 1}`,
 				day: index + 1,
 				author: authors[index % authors.length],
+				authorHref: `/users/sample${index % authors.length}`,
 				authorAvatarUrl: avatars[index % avatars.length],
 				title: titles[index % titles.length],
 				url: index < 7 ? 'https://example.com' : undefined,
@@ -53,3 +55,18 @@ export function makeSheet(id: string, number: number, count: number): CalendarSh
 }
 
 export const sampleSheets = [makeSheet('first', 1, 25), makeSheet('second', 2, 14)]
+
+export const projectProps = {
+	year: 2026,
+	title: 'ものづくりとWeb',
+	description: 'Webの技術、デザイン、日々の制作について、12月の25日間に書くカレンダーです。',
+	organizer: 'mori',
+	organizerHref: '/users/mori',
+	sheets: sampleSheets,
+	projectHref: '/projects/web-2026',
+	getCalendarHref: (number: number) => `/projects/web-2026/calendars/${number}`,
+	getJoinHref: (day?: number) => `/projects/web-2026/join${day ? `?day=${day}` : ''}`,
+	shareHref: '/projects/web-2026/share',
+} satisfies CalendarCollectionProps
+
+export const getEntryHref = (uri: string) => `/participations/${encodeURIComponent(uri)}`
