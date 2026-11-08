@@ -39,10 +39,10 @@ export const Help: Story = {
 	args: { active: 'help', children: <ServiceHelp /> },
 	play: async ({ canvasElement }) => {
 		const canvas = within(canvasElement)
-		await userEvent.click(canvas.getByText('カレンダーを増やすには？'))
+		await userEvent.click(canvas.getByText('同じ日に参加者がいる場合は？'))
 		await expect(
 			canvas.getByText(
-				'主催者は同じ企画にカレンダーを追加できます。それぞれのカレンダーに12月1日から25日までの参加枠があります。',
+				'そのまま参加できます。埋まっている日への参加は追加のカレンダーに登録されます。カレンダーの追加と連番は自動です。',
 			),
 		).toBeVisible()
 	},

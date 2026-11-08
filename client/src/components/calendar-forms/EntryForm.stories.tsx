@@ -22,10 +22,19 @@ type Story = StoryObj<typeof meta>
 export const Join: Story = {
 	play: async ({ canvasElement, args }) => {
 		const canvas = within(canvasElement)
-		await userEvent.type(canvas.getByLabelText('コメント'), 'CSSについて書きます')
+		await userEvent.type(canvas.getByLabelText('書く内容'), 'CSSについて書きます')
 		await userEvent.click(canvas.getByRole('button', { name: '参加を登録' }))
-		await expect(args.onSave).toHaveBeenCalledWith({ title: '', url: '', comment: 'CSSについて書きます' })
+		await expect(args.onSave).toHaveBeenCalledWith({ title: 'CSSについて書きます', url: '', comment: '' })
 		await expect(canvas.getByRole('status')).toHaveTextContent('参加を登録しました')
+	},
+}
+
+export const WritingContentRequired: Story = {
+	play: async ({ canvasElement, args }) => {
+		const canvas = within(canvasElement)
+		await userEvent.click(canvas.getByRole('button', { name: '参加を登録' }))
+		await expect(canvas.getByLabelText('書く内容')).toBeInvalid()
+		await expect(args.onSave).not.toHaveBeenCalled()
 	},
 }
 
@@ -57,6 +66,7 @@ export const InvalidArticleUrl: Story = {
 	args: { mode: 'edit' },
 	play: async ({ canvasElement, args }) => {
 		const canvas = within(canvasElement)
+		await userEvent.type(canvas.getByLabelText('書く内容'), '小さく始めるデザインシステム')
 		await userEvent.type(canvas.getByLabelText('記事URL'), 'javascript:alert(1)')
 		await userEvent.click(canvas.getByRole('button', { name: '保存する' }))
 		await expect(args.onSave).not.toHaveBeenCalled()
@@ -75,5 +85,5 @@ export const Saving: Story = {
 }
 
 export const RegistrationError: Story = {
-	args: { error: 'この日付にはすでに参加者がいます。' },
+	args: { error: '参加を登録できませんでした。' },
 }

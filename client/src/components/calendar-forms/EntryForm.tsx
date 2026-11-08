@@ -9,7 +9,7 @@ export interface EntryFormValue {
 
 export interface EntryFormProps {
 	calendarTitle: string
-	sheet: number
+	sheet?: number
 	day: number
 	participant: string
 	mode?: 'join' | 'edit'
@@ -57,7 +57,7 @@ export function EntryForm({
 				<div>
 					<dt>日付</dt>
 					<dd>
-						カレンダー {sheet} · 12月{day}日
+						{mode === 'edit' && sheet ? `カレンダー ${sheet} · ` : ''}12月{day}日
 					</dd>
 				</div>
 				<div>
@@ -80,11 +80,13 @@ export function EntryForm({
 					setSaved(true)
 				}}
 			>
-				<label htmlFor={`${id}-title`}>記事タイトル</label>
+				<label htmlFor={`${id}-title`}>書く内容</label>
 				<input
 					disabled={isSubmitting}
 					id={`${id}-title`}
 					name="title"
+					required
+					pattern=".*\S.*"
 					maxLength={200}
 					defaultValue={initialValue?.title ?? ''}
 				/>

@@ -36,7 +36,7 @@ export function CalendarRows({
 						<th scope="col">カレンダー</th>
 						<th scope="col">年</th>
 						<th scope="col">主催</th>
-						<th scope="col">参加枠</th>
+						<th scope="col">参加登録</th>
 						<th scope="col">枚数</th>
 					</tr>
 				</thead>
@@ -52,12 +52,10 @@ export function CalendarRows({
 									calendar.title
 								)}
 							</th>
-							<td className="directory-numeric">{calendar.year}</td>
-							<td>{calendar.owner}</td>
-							<td className="directory-numeric">
-								{calendar.participants} / {calendar.sheets * 25}
-							</td>
-							<td className="directory-numeric">{calendar.sheets}</td>
+							<td className="directory-numeric">{calendar.year}年</td>
+							<td>@{calendar.owner}</td>
+							<td className="directory-numeric">{calendar.participants}件</td>
+							<td className="directory-numeric">{calendar.sheets}枚</td>
 						</tr>
 					))}
 				</tbody>
@@ -83,15 +81,13 @@ export function CalendarDirectory({
 	const [year, setYear] = useState(initialYear)
 	const [query, setQuery] = useState('')
 	const [sort, setSort] = useState('newest')
-	const [openOnly, setOpenOnly] = useState(false)
 	const [visibleCount, setVisibleCount] = useState(Math.max(1, pageSize))
 	const years = [...new Set([initialYear, ...calendars.map((calendar) => calendar.year)])].sort((a, b) => b - a)
 	const matching = calendars
 		.filter(
 			(calendar) =>
 				calendar.year === year &&
-				`${calendar.title} ${calendar.owner}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()) &&
-				(!openOnly || calendar.participants < calendar.sheets * 25),
+				`${calendar.title} ${calendar.owner}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()),
 		)
 		.sort((a, b) =>
 			sort === 'popular'
@@ -102,7 +98,6 @@ export function CalendarDirectory({
 		)
 	function resetFilters() {
 		setQuery('')
-		setOpenOnly(false)
 		setSort('newest')
 		setVisibleCount(Math.max(1, pageSize))
 	}
@@ -157,20 +152,9 @@ export function CalendarDirectory({
 						}}
 					>
 						<option value="newest">新着順</option>
-						<option value="popular">参加人数順</option>
+						<option value="popular">登録件数順</option>
 						<option value="title">名前順</option>
 					</select>
-				</label>
-				<label className="directory-check">
-					<input
-						type="checkbox"
-						checked={openOnly}
-						onChange={(event) => {
-							setOpenOnly(event.target.checked)
-							setVisibleCount(Math.max(1, pageSize))
-						}}
-					/>
-					募集中のみ
 				</label>
 			</div>
 			<output className="directory-result-count">{matching.length}件</output>
@@ -199,20 +183,16 @@ export function CalendarDirectory({
 
 export function UserCalendarPage({
 	name,
-	handle,
 	joined,
 	hosted,
 	articles,
 	onCalendarSelect,
-	onEditProfile,
 }: {
 	name: string
-	handle: string
 	joined: CalendarSummary[]
 	hosted: CalendarSummary[]
 	articles: ArticleSummary[]
 	onCalendarSelect?: CalendarSelect
-	onEditProfile?: () => void
 }) {
 	const id = useId()
 	const [tab, setTab] = useState<'joined' | 'hosted' | 'articles'>('joined')
@@ -224,13 +204,7 @@ export function UserCalendarPage({
 						{name.slice(0, 1)}
 					</span>
 					<h1 id={`${id}-title`}>{name}</h1>
-					<span>@{handle}</span>
 				</div>
-				{onEditProfile && (
-					<button type="button" onClick={onEditProfile}>
-						プロフィールを編集
-					</button>
-				)}
 			</header>
 			<fieldset className="directory-tabs" aria-label="表示内容">
 				{(

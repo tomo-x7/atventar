@@ -21,3 +21,5 @@ export const ChangeYear: Story = {
 	},
 }
 export const Empty: Story = { args: { calendars: [] } }
+
+export const Mobile: Story = { globals: { viewport: { value: 'mobile1', isRotated: false } } }

@@ -94,12 +94,6 @@
 	outline-offset: 3px;
 }
 
-.calendar-form-ui__columns {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 20px;
-}
-
 .calendar-form-ui__actions {
 	display: flex;
 	flex-wrap: wrap;
@@ -148,9 +142,5 @@
 @media (max-width: 480px) {
 	.calendar-form-ui {
 		padding: 20px 16px;
-	}
-
-	.calendar-form-ui__columns {
-		gap: 12px;
 	}
 }

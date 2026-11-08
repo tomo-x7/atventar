@@ -73,7 +73,7 @@
 	gap: 16px;
 	padding-block: 22px 16px;
 }
-.directory-filters label:not(.directory-check) {
+.directory-filters label {
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
@@ -90,19 +90,7 @@
 	flex: 1;
 	min-width: 180px;
 }
-.directory-check {
-	display: flex;
-	align-items: center;
-	gap: 7px;
-	min-height: 38px;
-	white-space: nowrap;
-}
-.directory-check input {
-	width: 16px;
-	height: 16px;
-	margin: 0;
-	accent-color: var(--directory-green);
-}
+
 .directory-result-count {
 	display: block;
 	margin: 0 0 12px;
@@ -278,10 +266,63 @@
 		min-width: 55%;
 	}
 	.directory-articles li {
-		grid-template-columns: 1fr;
-		gap: 6px;
+		grid-template-columns: auto minmax(0, 1fr);
+		gap: 6px 12px;
+	}
+	.directory-articles li a {
+		grid-column: 1 / -1;
+		grid-row: 2;
+	}
+	.directory-articles li > span {
+		grid-column: 2;
+		grid-row: 1;
+		text-align: right;
 	}
 	.directory-profile {
 		gap: 10px;
+	}
+}
+
+@media (max-width: 600px) {
+	.directory-table-scroll {
+		overflow: visible;
+	}
+	.directory-table {
+		display: block;
+		min-width: 0;
+	}
+	.directory-table thead {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+	.directory-table tbody {
+		display: block;
+	}
+	.directory-table tbody tr {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto auto;
+		gap: 6px 12px;
+		padding: 14px 0;
+		border-bottom: 1px solid var(--directory-line);
+	}
+	.directory-table tbody th {
+		grid-column: 1 / -1;
+		width: auto;
+		padding: 0;
+		border: 0;
+	}
+	.directory-table tbody td {
+		min-width: 0;
+		padding: 0;
+		border: 0;
+		font-size: 13px;
+	}
+	.directory-table tbody td:nth-child(3) {
+		white-space: normal;
+		overflow-wrap: anywhere;
 	}
 }

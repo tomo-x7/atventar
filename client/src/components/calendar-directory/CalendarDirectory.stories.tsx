@@ -20,14 +20,6 @@ export const Search: Story = {
 		await expect(canvas.getByRole('button', { name: 'フロントエンド' })).toBeVisible()
 	},
 }
-export const OpenCalendars: Story = {
-	play: async ({ canvasElement }) => {
-		const canvas = within(canvasElement)
-		await userEvent.click(canvas.getByRole('checkbox', { name: '募集中のみ' }))
-		await expect(canvas.getByRole('status')).toHaveTextContent('10件')
-		await expect(canvas.queryByRole('button', { name: '個人開発' })).not.toBeInTheDocument()
-	},
-}
 export const LoadMore: Story = {
 	play: async ({ canvasElement }) => {
 		const canvas = within(canvasElement)
@@ -47,6 +39,7 @@ export const NoResults: Story = {
 }
 export const Empty: Story = { args: { calendars: [] } }
 export const Mobile: Story = {
+	globals: { viewport: { value: 'mobile1', isRotated: false } },
 	render: (args) => (
 		<div style={{ maxWidth: 390 }}>
 			<CalendarDirectory {...args} />

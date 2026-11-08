@@ -9,7 +9,6 @@ const meta = {
 	parameters: { layout: 'fullscreen' },
 	args: {
 		name: 'tomo',
-		handle: 'tomo',
 		joined: calendarSummaries.slice(0, 4),
 		hosted: calendarSummaries.slice(1, 2),
 		articles: userArticles,
@@ -19,7 +18,6 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 export const Default: Story = {}
-export const OwnProfile: Story = { args: { onEditProfile: fn() } }
 export const Articles: Story = {
 	play: async ({ canvasElement }) => {
 		const canvas = within(canvasElement)
@@ -36,3 +34,5 @@ export const Hosting: Story = {
 	},
 }
 export const Empty: Story = { args: { joined: [], hosted: [], articles: [] } }
+
+export const Mobile: Story = { globals: { viewport: { value: 'mobile1', isRotated: false } } }

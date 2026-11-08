@@ -14,8 +14,7 @@ export {
 	type CalendarSummary,
 	UserCalendarPage,
 } from './calendar-directory/CalendarDirectory'
-export { AccountPanel, type AccountPanelProps, type ProfileValue } from './calendar-forms/AccountPanel'
+export { AccountPanel, type AccountPanelProps } from './calendar-forms/AccountPanel'
 export { CalendarForm, type CalendarFormProps, type CalendarFormValue } from './calendar-forms/CalendarForm'
 export { EntryForm, type EntryFormProps, type EntryFormValue } from './calendar-forms/EntryForm'
-export { CalendarManagement, type CalendarManagementProps } from './calendar-management/CalendarManagement'
 export { type ServiceDestination, ServiceHelp, ServiceShell, ServiceState } from './service-shell/ServiceShell'
