@@ -14,7 +14,16 @@ export function AccountPanel({ onSignIn, onAtPassport, isSubmitting = false, err
 	return (
 		<section className={styles.root} aria-labelledby={`${id}-heading`} aria-busy={isSubmitting}>
 			<h1 id={`${id}-heading`}>ログイン</h1>
+			<button
+				className={`${styles.primary} ${styles.passport}`}
+				type="button"
+				disabled={isSubmitting}
+				onClick={onAtPassport}
+			>
+				AtPassportでログイン
+			</button>
 			<form
+				className={styles.handleLogin}
 				onSubmit={(event) => {
 					event.preventDefault()
 					if (!isSubmitting) onSignIn(String(new FormData(event.currentTarget).get('handle')).trim().replace(/^@/, ''))
@@ -32,11 +41,8 @@ export function AccountPanel({ onSignIn, onAtPassport, isSubmitting = false, err
 					disabled={isSubmitting}
 				/>
 				<div className={styles.actions}>
-					<button className={styles.primary} type="submit" disabled={isSubmitting}>
+					<button type="submit" disabled={isSubmitting}>
 						{isSubmitting ? 'ログイン中…' : 'ログイン'}
-					</button>
-					<button type="button" disabled={isSubmitting} onClick={onAtPassport}>
-						AtPassportでログイン
 					</button>
 				</div>
 			</form>

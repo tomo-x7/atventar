@@ -109,6 +109,18 @@
 	max-width: 360px;
 }
 
+.root button.passport {
+	width: 100%;
+	min-height: 48px;
+	font-size: 16px;
+}
+
+.handleLogin {
+	margin-top: 24px;
+	padding-top: 24px;
+	border-top: 1px solid var(--at-color-border);
+}
+
 .dangerZone {
 	margin-top: 32px;
 	padding-top: 24px;
