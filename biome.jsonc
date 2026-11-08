@@ -6,7 +6,14 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"includes": ["**", "!shared"]
+		"includes": [
+			"**",
+			"!shared",
+			"!appview/worker-configuration.d.ts",
+			"!appview/src/lexicons",
+			"!client/src/lexicons",
+			"!appview/migrations/meta"
+		]
 	},
 	"formatter": {
 		"indentStyle": "tab",

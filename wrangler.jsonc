@@ -1,0 +1,23 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "atventar",
+	"main": "./appview/src/index.ts",
+	"compatibility_date": "2026-11-08",
+	"compatibility_flags": ["nodejs_compat"],
+	"assets": {
+		"directory": "./client/dist",
+		"not_found_handling": "single-page-application",
+		"run_worker_first": ["/health", "/xrpc/*", "/ingest", "/ingest/*"]
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "atventar_db",
+			"database_id": "717e7ad6-a49e-4886-bcd8-c4dee489c32c",
+			"migrations_dir": "./appview/migrations"
+		}
+	],
+	"secrets": {
+		"required": ["INGEST_TOKEN"]
+	}
+}
