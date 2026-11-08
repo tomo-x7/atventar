@@ -1,6 +1,8 @@
 {
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "atventar",
+	"preview_urls": false,"workers_dev": false,
+	"routes": [{ "pattern": "atventar.tomo-x.win", "custom_domain": true }],
 	"main": "./appview/src/index.ts",
 	"compatibility_date": "2026-11-08",
 	"compatibility_flags": ["nodejs_compat"],

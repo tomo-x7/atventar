@@ -29,15 +29,13 @@ jobs:
       - run: pnpm test
       - run: pnpm build:ingester
       - run: pnpm build
-      - name: Apply D1 migrations
+      - name: Upload Cloudflare build
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        run: pnpm db:migrate:remote
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      - name: Publish Worker and assets
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        run: pnpm run deploy
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudflare-build
+          path: |
+            dist/
+            client/dist/
+          if-no-files-found: error
+          retention-days: 7
