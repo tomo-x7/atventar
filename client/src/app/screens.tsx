@@ -31,7 +31,7 @@ import {
 	toCalendarSummary,
 	toEntryFormValue,
 } from '../data'
-import { calendarUri, entryUri, paths } from './paths'
+import { calendarDocumentUri, calendarUri, entryUri, paths } from './paths'
 import { go } from './router'
 import {
 	api,
@@ -185,6 +185,14 @@ export function DirectoryPage() {
 export function CalendarPage() {
 	const uri = useRecordUri('calendar')
 	const params = useParams({ strict: false }) as { number?: string }
+	useEffect(() => {
+		if (params.number !== undefined) return
+		const link = document.createElement('link')
+		link.rel = 'site.standard.document'
+		link.href = calendarDocumentUri(uri)
+		document.head.append(link)
+		return () => link.remove()
+	}, [uri, params.number])
 	const calendar = useCalendar(uri)
 	const links = useProfileLinks()
 	if (calendar.isPending) return <PageMessage title="読み込み中…" />

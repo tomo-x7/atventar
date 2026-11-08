@@ -12,7 +12,10 @@ test('public OAuth metadata identifies the request origin and limits record perm
 	const expected = oauthClientMetadata('https://calendar.example/oauth-client-metadata.json')
 	assert.equal(expected.client_id, 'https://calendar.example/oauth-client-metadata.json')
 	assert.deepEqual(expected.redirect_uris, ['https://calendar.example/auth/callback'])
-	assert.equal(expected.scope, 'atproto repo:win.tomo-x.atventar.calendar repo:win.tomo-x.atventar.entry')
+	assert.equal(
+		expected.scope,
+		'atproto repo:win.tomo-x.atventar.calendar repo:win.tomo-x.atventar.entry repo:site.standard.document',
+	)
 	const response = await app.request('https://calendar.example/oauth-client-metadata.json')
 	assert.equal(response.status, 200)
 	assert.deepEqual(await response.json(), expected)

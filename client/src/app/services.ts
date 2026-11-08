@@ -32,7 +32,11 @@ export function useEntry(uri: string) {
 
 export async function repositoryForWrite(session: RepositorySession, trustedServerTime?: string) {
 	const serverTime = trustedServerTime ?? (await api.getServerInfo()).serverTime
-	return createRepositoryClient(session, api, { now: () => new Date(serverTime) })
+	return createRepositoryClient(session, api, {
+		now: () => new Date(serverTime),
+		appOrigin: config.appOrigin,
+		publication: config.publication,
+	})
 }
 
 export type SavedWrite = { uri: string; cid?: string; kind: 'calendar' | 'entry'; deleted?: boolean; started: number }

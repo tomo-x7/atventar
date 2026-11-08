@@ -1,5 +1,8 @@
+import { TID } from '@atproto/common-web'
 import { Client, type FetchHandler, XrpcResponseError } from '@atproto/lex'
-import calendarRecord, { type Main as CalendarRecord } from '../lexicons/win/tomo-x/atventar/calendar'
+import getLatestCommit from '../lexicons/com/atproto/sync/getLatestCommit'
+import documentRecord, { type Main as DocumentRecord } from '../lexicons/site/standard/document'
+import calendarRecord, { type Main as CalendarRecord, documentContent } from '../lexicons/win/tomo-x/atventar/calendar'
 import entryRecord, { type Main as EntryRecord } from '../lexicons/win/tomo-x/atventar/entry'
 import type { AppViewClient, ReadOptions } from './appview'
 import { DataError } from './errors'
@@ -40,7 +43,12 @@ type Snapshot<T> = {
 	readonly [sourceSnapshot]: true
 }
 export type EntrySnapshot = Snapshot<EntryRecord>
-export type CalendarSnapshot = Snapshot<CalendarRecord>
+const calendarSource = Symbol('calendar document source')
+const documentCollection = 'site.standard.document'
+type DocumentSource = { readonly cid: string; readonly record: Readonly<DocumentRecord> }
+export type CalendarSnapshot = Snapshot<CalendarRecord> & {
+	readonly [calendarSource]: { readonly commit: string; readonly document: DocumentSource | null }
+}
 
 /** An AppView projection cannot be used as the source of a record update. */
 function assertSnapshot<T>(snapshot: Snapshot<T>) {
@@ -74,7 +82,7 @@ function entryFields(input: EntryInput) {
 export function createRepositoryClient(
 	session: RepositorySession,
 	appView: Pick<AppViewClient, 'getCalendar'>,
-	options: { now?: () => Date } = {},
+	options: { now?: () => Date; appOrigin?: string; publication?: string } = {},
 ) {
 	const did = validateDid(session.sub)
 	const client = new Client({ did, fetchHandler: session.fetchHandler.bind(session) })
@@ -91,6 +99,89 @@ export function createRepositoryClient(
 		const { calendar } = await appView.getCalendar(uri, readOptions)
 		if (calendar.uri !== uri) throw new DataError('invalid-record', '参照先のカレンダーが一致しません')
 		return { uri: calendar.uri, cid: calendar.cid }
+	}
+
+	function documentForCalendar(
+		uri: string,
+		record: CalendarRecord,
+		previous?: Readonly<DocumentRecord>,
+		updatedAt?: string,
+	) {
+		const { rkey } = ownRecord(uri, calendarCollection)
+		const appOrigin = httpUrl(options.appOrigin)
+		if (!appOrigin) throw new DataError('invalid-input', '公開アプリのURLが設定されていません')
+		if (options.publication !== undefined) parseRecordUri(options.publication, 'site.standard.publication')
+		if (previous) {
+			assertCalendarDocument(previous, uri)
+			if (!previous.site.startsWith('at://') && new URL(previous.site).origin !== new URL(appOrigin).origin)
+				throw new DataError('invalid-record', 'ドキュメントの公開先がこのアプリと一致しません')
+		}
+		return documentRecord.parse({
+			...previous,
+			$type: documentCollection,
+			site: previous?.site.startsWith('at://')
+				? previous.site
+				: (options.publication ?? previous?.site ?? new URL(appOrigin).origin),
+			path: previous?.path ?? `/calendars/${encodeURIComponent(did)}/${encodeURIComponent(rkey)}`,
+			title: record.title,
+			description: record.description,
+			publishedAt: previous?.publishedAt ?? record.createdAt,
+			...(updatedAt ? { updatedAt } : {}),
+			content: documentContent.parse({ $type: `${calendarCollection}#documentContent`, calendar: uri }),
+			textContent: '',
+		})
+	}
+
+	function assertCalendarDocument(record: Readonly<DocumentRecord>, uri: string) {
+		const { rkey } = ownRecord(uri, calendarCollection)
+		const path = `/calendars/${encodeURIComponent(did)}/${encodeURIComponent(rkey)}`
+		const content = documentContent.safeParse(record.content)
+		if (!content.success || content.value.calendar !== uri || record.path !== path)
+			throw new DataError('invalid-record', '同じキーのドキュメントが別の内容に使われています')
+		if (record.site.startsWith('at://')) parseRecordUri(record.site, 'site.standard.publication')
+		else {
+			const site = httpUrl(record.site)
+			if (!site) throw new DataError('invalid-record', 'ドキュメントの公開先が正しくありません')
+			const url = new URL(site)
+			if (url.username || url.password || url.search || url.hash || url.pathname !== '/')
+				throw new DataError('invalid-record', 'ドキュメントの公開先が正しくありません')
+		}
+	}
+
+	async function readDocument(uri: string, rkey: string, readOptions: ReadOptions): Promise<DocumentSource | null> {
+		try {
+			const { body } = await client.getRecord(documentCollection, rkey, { ...readOptions, repo: did })
+			if (body.uri !== `at://${did}/${documentCollection}/${rkey}` || !body.cid)
+				throw new DataError('invalid-record', '取得したドキュメントURIまたはCIDが正しくありません')
+			const record = documentRecord.parse(body.value)
+			assertCalendarDocument(record, uri)
+			return Object.freeze({ cid: body.cid, record: Object.freeze(record) })
+		} catch (error) {
+			if (error instanceof XrpcResponseError && error.error === 'RecordNotFound') return null
+			throw error
+		}
+	}
+
+	function calendarWriteResult(
+		body: Awaited<ReturnType<typeof client.applyWrites>>['body'],
+		uri: string,
+		rkey: string,
+	) {
+		const calendar = body.results?.[0]
+		const document = body.results?.[1]
+		const documentUri = `at://${did}/${documentCollection}/${rkey}` as const
+		if (
+			!calendar ||
+			!('uri' in calendar) ||
+			calendar.uri !== uri ||
+			typeof calendar.cid !== 'string' ||
+			!document ||
+			!('uri' in document) ||
+			document.uri !== documentUri ||
+			typeof document.cid !== 'string'
+		)
+			throw new DataError('invalid-record', '保存結果を確認できませんでした。再送信する前にPDSを確認してください')
+		return { uri: calendar.uri, cid: calendar.cid, documentUri, documentCid: document.cid }
 	}
 
 	return {
@@ -113,15 +204,19 @@ export function createRepositoryClient(
 		},
 		async readCalendarForEdit(uri: string, readOptions: ReadOptions = {}): Promise<CalendarSnapshot> {
 			const { rkey } = ownRecord(uri, calendarCollection)
+			// applyWrites only supports repository-wide CAS. Read the commit before both sources.
+			const commit = await client.call(getLatestCommit, { did }, readOptions)
 			const { body } = await client.getRecord(calendarCollection, rkey, { ...readOptions, repo: did })
 			if (body.uri !== uri || !body.cid)
 				throw new DataError('invalid-record', '取得したカレンダーURIまたはCIDが正しくありません')
 			const record = calendarRecord.parse(body.value)
+			const document = await readDocument(uri, rkey, readOptions)
 			return Object.freeze({
 				uri: body.uri,
 				cid: body.cid,
 				record: Object.freeze(record),
 				[sourceSnapshot]: true as const,
+				[calendarSource]: Object.freeze({ commit: commit.cid, document }),
 			})
 		},
 		async createCalendar(input: CalendarInput, readOptions: ReadOptions = {}) {
@@ -132,7 +227,14 @@ export function createRepositoryClient(
 				description: input.description.trim() || undefined,
 				createdAt: now().toISOString(),
 			})
-			return (await client.createRecord(record, undefined, { ...readOptions, repo: did })).body
+			const rkey = TID.nextStr()
+			const uri = `at://${did}/${calendarCollection}/${rkey}` as const
+			const document = documentForCalendar(uri, record)
+			const { body } = await client.applyWrites(
+				(op) => [op.create(calendarRecord, record, { rkey }), op.create(documentRecord, document, { rkey })],
+				{ ...readOptions, repo: did },
+			)
+			return calendarWriteResult(body, uri, rkey)
 		},
 		async updateCalendar(snapshot: CalendarSnapshot, input: CalendarInput, readOptions: ReadOptions = {}) {
 			assertSnapshot(snapshot)
@@ -143,10 +245,21 @@ export function createRepositoryClient(
 				year: validateYear(input.year),
 				description: input.description.trim() || undefined,
 			})
-			return handleConflict(
-				async () =>
-					(await client.putRecord(record, rkey, { ...readOptions, repo: did, swapRecord: snapshot.cid })).body,
-			)
+			const source = snapshot[calendarSource]
+			if (!source) throw new DataError('invalid-record', '編集前にPDSから現在のカレンダーを取得してください')
+			const document = documentForCalendar(snapshot.uri, record, source.document?.record, now().toISOString())
+			return handleConflict(async () => {
+				const { body } = await client.applyWrites(
+					(op) => [
+						op.update(calendarRecord, record, { rkey }),
+						source.document
+							? op.update(documentRecord, document, { rkey })
+							: op.create(documentRecord, document, { rkey }),
+					],
+					{ ...readOptions, repo: did, swapCommit: source.commit },
+				)
+				return calendarWriteResult(body, snapshot.uri, rkey)
+			})
 		},
 		async createEntry(calendarUri: string, input: EntryInput, readOptions: ReadOptions = {}) {
 			const fields = entryFields(input)

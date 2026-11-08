@@ -1,6 +1,7 @@
 import './lexicon-compat.js'
 import { XRPCError } from '@evex-dev/xrpc-hono'
 import { Hono } from 'hono'
+import { STANDARD_PUBLICATION_URI } from '../../standard-site.js'
 import type { Env } from './env.js'
 import { ApiError } from './errors.js'
 import { ingest } from './ingest.js'
@@ -45,6 +46,10 @@ app.get('/health', (c) => {
 app.get('/oauth-client-metadata.json', (c) => {
 	c.header('Cache-Control', 'public, max-age=3600')
 	return c.json(oauthClientMetadata(c.req.url))
+})
+app.get('/.well-known/site.standard.publication', (c) => {
+	c.header('Cache-Control', 'public, max-age=3600')
+	return c.text(STANDARD_PUBLICATION_URI)
 })
 app.route('/ingest', ingest)
 app.route('/', server.xrpc.createApp())

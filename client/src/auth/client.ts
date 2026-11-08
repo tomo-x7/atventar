@@ -4,7 +4,8 @@ import { config } from '../config'
 
 export const OAUTH_CALLBACK_PATH = '/auth/callback'
 export const ATPASSPORT_CALLBACK_PATH = '/auth/atpassport/callback'
-export const OAUTH_SCOPE = 'atproto repo:win.tomo-x.atventar.calendar repo:win.tomo-x.atventar.entry'
+export const OAUTH_SCOPE =
+	'atproto repo:win.tomo-x.atventar.calendar repo:win.tomo-x.atventar.entry repo:site.standard.document'
 
 export function createPassport(): AtPassport {
 	return new AtPassport({

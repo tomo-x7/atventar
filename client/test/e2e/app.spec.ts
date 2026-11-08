@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { STANDARD_PUBLICATION_URI } from '../../../standard-site'
 
 const did = 'did:plc:aaaaaaaaaaaaaaaaaaaaaaaa'
 const secondDid = 'did:plc:bbbbbbbbbbbbbbbbbbbbbbbb'
@@ -100,7 +101,12 @@ test('browse all calendars, open the second sheet, and keep a stable registratio
 	await page.goto('/')
 	await page.getByRole('button', { name: 'ものづくり2026', exact: true }).click()
 	await expect(page.getByRole('heading', { name: 'ものづくり2026', exact: true })).toBeVisible()
+	await expect(page.locator('head link[rel="site.standard.document"]')).toHaveAttribute(
+		'href',
+		`at://${did}/site.standard.document/3mabcdefghij2`,
+	)
 	await page.getByRole('link', { name: '2枚目 1/25人' }).click()
+	await expect(page.locator('head link[rel="site.standard.document"]')).toHaveCount(0)
 	await expect(page.getByRole('heading', { name: '2枚目 / 全2枚' })).toBeVisible()
 	await expect(page.getByText('型設計の話', { exact: true })).toBeVisible()
 	await expect(page.getByText('CSSについて書きます', { exact: true })).toHaveCount(0)
@@ -129,7 +135,7 @@ test('search is URL-backed and handles zero results and browser back', async ({ 
 test('joining a day preserves the requested route through the login gate', async ({ page }) => {
 	await page.goto(`${projectPath}/join?day=10`)
 	await expect(page).toHaveURL(/\/login\?returnTo=/)
-	await expect(page.getByRole('heading', { name: 'ログイン' })).toBeVisible()
+	await expect(page.getByRole('heading', { name: 'ログイン', exact: true })).toBeVisible()
 	await expect(page.getByRole('button', { name: '@passportでログイン' })).toBeVisible()
 	const url = new URL(page.url())
 	await expect(url.searchParams.get('returnTo')).toBe(`${projectPath}/join?day=10`)
@@ -319,15 +325,31 @@ test('a new day in the same join route remounts the initial form selection', asy
 	await expect(page.getByRole('combobox', { name: '担当日' })).toHaveValue('18')
 })
 
-test('calendar creation uses the server year and waits for the indexed CID', async ({ page }) => {
+test('calendar and standard document are saved atomically using the server year before indexing', async ({ page }) => {
 	await signedIn(page)
 	await page.clock.setFixedTime(new Date('2038-01-01T00:00:00Z'))
-	const createdUri = `at://${did}/win.tomo-x.atventar.calendar/new-calendar`
+	let createdUri = ''
 	let indexed = false
-	let written: Record<string, unknown> | undefined
-	await page.route('https://pds.test/xrpc/com.atproto.repo.createRecord', (route) => {
+	let written:
+		| { repo: string; writes: { $type: string; collection: string; rkey: string; value: Record<string, unknown> }[] }
+		| undefined
+	await page.route('https://pds.test/xrpc/com.atproto.sync.getLatestCommit**', (route) =>
+		route.fulfill({ json: { cid, rev: '3mabcdefghij2' } }),
+	)
+	await page.route('https://pds.test/xrpc/com.atproto.repo.applyWrites', (route) => {
 		written = route.request().postDataJSON()
-		return route.fulfill({ json: { uri: createdUri, cid: newCid } })
+		const writes = written?.writes ?? []
+		const calendarWrite = writes.find((write) => write.collection === 'win.tomo-x.atventar.calendar')
+		createdUri = `at://${did}/win.tomo-x.atventar.calendar/${calendarWrite?.rkey}`
+		return route.fulfill({
+			json: {
+				results: writes.map((write) => ({
+					$type: 'com.atproto.repo.applyWrites#createResult',
+					uri: `at://${did}/${write.collection}/${write.rkey}`,
+					cid: newCid,
+				})),
+			},
+		})
 	})
 	await page.route('**/xrpc/win.tomo-x.atventar.getCalendar**', (route) => {
 		if (new URL(route.request().url()).searchParams.get('uri') !== createdUri) return route.fallback()
@@ -349,11 +371,35 @@ test('calendar creation uses the server year and waits for the indexed CID', asy
 	await page.goto('/calendars/new')
 	await expect(page.getByRole('heading', { name: '2026年のカレンダーを作成' })).toBeVisible()
 	await page.getByRole('textbox', { name: 'タイトル' }).fill('新しい企画')
+	await page.getByRole('textbox', { name: '説明' }).fill('技術記事を持ち寄ります。')
 	await page.getByRole('button', { name: '作成する' }).click()
 	await expect(page.getByRole('status')).toHaveText('保存しました。反映を待っています。')
-	expect(written).toMatchObject({
-		repo: did,
-		record: { year: 2026, title: '新しい企画', createdAt: '2026-11-09T12:00:00.000Z' },
+	expect(written?.repo).toBe(did)
+	expect(written?.writes).toHaveLength(2)
+	const calendarWrite = written?.writes.find((write) => write.collection === 'win.tomo-x.atventar.calendar')
+	const documentWrite = written?.writes.find((write) => write.collection === 'site.standard.document')
+	expect(calendarWrite).toMatchObject({
+		$type: 'com.atproto.repo.applyWrites#create',
+		value: {
+			year: 2026,
+			title: '新しい企画',
+			description: '技術記事を持ち寄ります。',
+			createdAt: '2026-11-09T12:00:00.000Z',
+		},
+	})
+	expect(documentWrite).toMatchObject({
+		$type: 'com.atproto.repo.applyWrites#create',
+		rkey: calendarWrite?.rkey,
+		value: {
+			$type: 'site.standard.document',
+			site: STANDARD_PUBLICATION_URI,
+			path: `/calendars/${encodeURIComponent(did)}/${calendarWrite?.rkey}`,
+			title: '新しい企画',
+			description: '技術記事を持ち寄ります。',
+			publishedAt: '2026-11-09T12:00:00.000Z',
+			content: { $type: 'win.tomo-x.atventar.calendar#documentContent', calendar: createdUri },
+			textContent: '',
+		},
 	})
 	indexed = true
 	await page.getByRole('button', { name: '反映を確認' }).click()

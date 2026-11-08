@@ -22,6 +22,10 @@ export function calendarUri(did: string, rkey: string) {
 	parseRecordUri(uri, calendarCollection)
 	return uri
 }
+export function calendarDocumentUri(uri: string) {
+	const { did, rkey } = parseRecordUri(uri, calendarCollection)
+	return `at://${did}/site.standard.document/${rkey}`
+}
 export function entryUri(did: string, rkey: string) {
 	const uri = `at://${did}/${entryCollection}/${rkey}`
 	parseRecordUri(uri, entryCollection)

@@ -68,7 +68,10 @@ function initialize(): Promise<OAuthSession | null> {
 			}
 		}
 		const client = await getOAuthClient()
-		return (await client.initRestore())?.session ?? null
+		const restored = (await client.initRestore())?.session ?? null
+		if (restored && !(await restored.getTokenInfo(false)).scope.split(' ').includes('repo:site.standard.document'))
+			throw new Error('カレンダーの保存権限が追加されました。もう一度ログインしてください。')
+		return restored
 	})()
 	return initialization
 }

@@ -13,7 +13,7 @@ export function oauthClientMetadata(requestUrl: string) {
 		client_name: 'Atventar',
 		client_uri: origin,
 		redirect_uris: [`${origin}/auth/callback`],
-		scope: 'atproto repo:win.tomo-x.atventar.calendar repo:win.tomo-x.atventar.entry',
+		scope: 'atproto repo:win.tomo-x.atventar.calendar repo:win.tomo-x.atventar.entry repo:site.standard.document',
 		grant_types: ['authorization_code', 'refresh_token'],
 		response_types: ['code'],
 		token_endpoint_auth_method: 'none',

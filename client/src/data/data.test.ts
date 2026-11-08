@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import documentRecord from '../lexicons/site/standard/document'
 import calendarRecord from '../lexicons/win/tomo-x/atventar/calendar'
 import { calendarView, entryView } from '../lexicons/win/tomo-x/atventar/defs'
 import entryRecord from '../lexicons/win/tomo-x/atventar/entry'
@@ -46,26 +47,42 @@ const projected = (uri = entryUri, sheet = 1, day = 12) =>
 		sheet,
 	})
 
-function harness() {
+function harness(options: { publication?: string } = {}) {
 	const requests: { path: string; body?: Record<string, unknown> }[] = []
 	let conflict = false
+	let document: Record<string, unknown> | null = null
 	const session = {
 		sub: participant,
 		async fetchHandler(path: `/${string}`, init: RequestInit) {
 			assert.equal(this.sub, participant, 'OAuth transport preserves session this binding')
 			const body = init.body ? ((await new Response(init.body).json()) as Record<string, unknown>) : undefined
 			requests.push({ path, body })
+			if (path.startsWith('/xrpc/com.atproto.sync.getLatestCommit')) return Response.json({ cid, rev: '3lsh3fnlgrk2a' })
 			if (path.startsWith('/xrpc/com.atproto.repo.getRecord')) {
 				const params = new URL(path, 'https://pds.example').searchParams
 				const isCalendar = params.get('collection') === calendarCollection
+				if (params.get('collection') === 'site.standard.document')
+					return document
+						? Response.json({ uri: `at://${participant}/site.standard.document/3lsh3fnlgrk2a`, cid, value: document })
+						: Response.json({ error: 'RecordNotFound', message: 'missing document' }, { status: 400 })
 				return Response.json({
-					uri: isCalendar ? `at://${participant}/${calendarCollection}/owned` : entryUri,
+					uri: isCalendar ? `at://${participant}/${calendarCollection}/3lsh3fnlgrk2a` : entryUri,
 					cid,
 					value: isCalendar ? calendar.record : raw,
 				})
 			}
 			if (conflict) return Response.json({ error: 'InvalidSwap', message: 'stale CID' }, { status: 400 })
 			if (path.endsWith('deleteRecord')) return Response.json({})
+			if (path.endsWith('applyWrites')) {
+				const writes = body?.writes as { $type: string; collection: string; rkey: string }[]
+				return Response.json({
+					results: writes.map((write) => ({
+						$type: `${write.$type}Result`,
+						uri: `at://${participant}/${write.collection}/${write.rkey}`,
+						cid,
+					})),
+				})
+			}
 			return Response.json({ uri: entryUri, cid })
 		},
 	}
@@ -75,7 +92,11 @@ function harness() {
 			return { calendar, entries: [projected()] }
 		},
 	}
-	const repo = createRepositoryClient(session, appView, { now: () => new Date('2026-11-09T00:00:00.000Z') })
+	const repo = createRepositoryClient(session, appView, {
+		now: () => new Date('2026-11-09T00:00:00.000Z'),
+		appOrigin: 'https://calendar.example',
+		...options,
+	})
 	return {
 		repo,
 		requests,
@@ -83,6 +104,9 @@ function harness() {
 		appView,
 		setConflict: () => {
 			conflict = true
+		},
+		setDocument: (record: Record<string, unknown>) => {
+			document = record
 		},
 	}
 }
@@ -187,12 +211,16 @@ test('invalid day, URL, title, year, and non-DID record URIs are rejected before
 
 test('calendar edits preserve source createdAt and use owner validation and CAS', async () => {
 	const { repo, requests, setConflict } = harness()
-	const uri = `at://${participant}/${calendarCollection}/owned`
+	const uri = `at://${participant}/${calendarCollection}/3lsh3fnlgrk2a`
 	const snapshot = await repo.readCalendarForEdit(uri)
 	await repo.updateCalendar(snapshot, { title: '更新した企画', year: 2026, description: '詳細' })
 	const write = requests.at(-1)?.body
-	assert.equal(write?.swapRecord, cid)
-	assert.equal((write?.record as Record<string, unknown>).createdAt, createdAt)
+	assert.equal(write?.swapCommit, cid)
+	const writes = write?.writes as { $type: string; value: Record<string, unknown> }[]
+	assert.equal(writes[0].value.createdAt, createdAt)
+	assert.equal(writes[0].$type, 'com.atproto.repo.applyWrites#update')
+	assert.equal(writes[1].$type, 'com.atproto.repo.applyWrites#create')
+	assert.equal(writes[1].value.publishedAt, createdAt)
 	await assert.rejects(repo.readCalendarForEdit(calendarUri), errorCode('not-owner'))
 	setConflict()
 	await assert.rejects(
@@ -286,4 +314,168 @@ test('server info uses the server timestamp and JST year rather than the browser
 		createAppViewClient('https://appview.example', invalid).getServerInfo(),
 		errorCode('invalid-record'),
 	)
+})
+
+const ownCalendarUri = `at://${participant}/${calendarCollection}/3lsh3fnlgrk2a`
+const ownDocumentUri = `at://${participant}/site.standard.document/3lsh3fnlgrk2a`
+const documentPath = `/calendars/${encodeURIComponent(participant)}/3lsh3fnlgrk2a`
+function existingDocument(overrides: Record<string, unknown> = {}) {
+	return documentRecord.parse({
+		$type: 'site.standard.document',
+		site: 'https://calendar.example',
+		path: documentPath,
+		title: '元の企画',
+		description: '元の説明',
+		publishedAt: createdAt,
+		content: { $type: 'win.tomo-x.atventar.calendar#documentContent', calendar: ownCalendarUri },
+		textContent: '',
+		...overrides,
+	})
+}
+
+test('calendar creation atomically creates a standard document referring to the calendar AT URI', async () => {
+	const { repo, requests } = harness()
+	const result = await repo.createCalendar({ title: ' 企画 ', year: 2026, description: ' 説明 ' })
+	assert.equal(requests.length, 1)
+	assert.equal(requests[0].path, '/xrpc/com.atproto.repo.applyWrites')
+	const body = requests[0].body
+	const writes = body?.writes as { $type: string; collection: string; rkey: string; value: Record<string, unknown> }[]
+	assert.equal(body?.repo, participant)
+	assert.equal(writes.length, 2)
+	assert.equal(writes[0].$type, 'com.atproto.repo.applyWrites#create')
+	assert.equal(writes[1].$type, 'com.atproto.repo.applyWrites#create')
+	assert.equal(writes[0].collection, calendarCollection)
+	assert.equal(writes[1].collection, 'site.standard.document')
+	assert.match(writes[0].rkey, /^[234567abcdefghij][234567abcdefghijklmnopqrstuvwxyz]{12}$/)
+	assert.equal(writes[0].rkey, writes[1].rkey)
+	const document = documentRecord.parse(writes[1].value)
+	assert.equal(document.site, 'https://calendar.example')
+	assert.equal(document.path, `/calendars/${encodeURIComponent(participant)}/${writes[0].rkey}`)
+	assert.equal(document.title, '企画')
+	assert.equal(document.description, '説明')
+	assert.equal(document.publishedAt, writes[0].value.createdAt)
+	assert.equal(document.textContent, '')
+	assert.deepEqual(document.content, { $type: 'win.tomo-x.atventar.calendar#documentContent', calendar: result.uri })
+	assert.equal(result.documentUri, `at://${participant}/site.standard.document/${writes[0].rkey}`)
+	assert.equal(result.cid, cid)
+	assert.equal(result.documentCid, cid)
+})
+
+test('calendar editing preserves standard document publication and metadata in one commit-guarded transaction', async () => {
+	const { repo, requests, setDocument } = harness()
+	const publication = 'at://did:plc:publisher/site.standard.publication/3lsh3fnlgrk2a'
+	const original = existingDocument({
+		site: publication,
+		tags: ['advent'],
+		bskyPostRef: { uri: `at://${participant}/app.bsky.feed.post/3lsh3fnlgrk2a`, cid },
+		futureField: 'keep',
+	})
+	setDocument(original)
+	const snapshot = await repo.readCalendarForEdit(ownCalendarUri)
+	assert.match(requests[0].path, /^\/xrpc\/com.atproto.sync.getLatestCommit\?/)
+	assert.equal(requests.length, 3)
+	const result = await repo.updateCalendar(snapshot, { title: '変更後', year: 2026, description: '' })
+	assert.equal(result.documentUri, ownDocumentUri)
+	const write = requests.at(-1)?.body
+	assert.equal(write?.swapCommit, cid)
+	const writes = write?.writes as { $type: string; value: Record<string, unknown> }[]
+	assert.equal(writes.length, 2)
+	assert.ok(writes.every((item) => item.$type === 'com.atproto.repo.applyWrites#update'))
+	const document = documentRecord.parse(writes[1].value)
+	assert.equal(document.site, publication)
+	assert.equal(document.path, documentPath)
+	assert.equal(document.title, '変更後')
+	assert.equal(document.description, undefined)
+	assert.equal(document.publishedAt, createdAt)
+	assert.equal(document.updatedAt, '2026-11-09T00:00:00.000Z')
+	assert.equal(document.textContent, '')
+	assert.deepEqual(document.tags, original.tags)
+	assert.deepEqual(document.bskyPostRef, original.bskyPostRef)
+	assert.equal(writes[1].value.futureField, 'keep')
+})
+
+test('an unrelated document at the same record key blocks editing instead of being overwritten', async () => {
+	for (const overrides of [
+		{ content: { $type: 'win.tomo-x.atventar.calendar#documentContent', calendar: calendarUri } },
+		{ content: { $type: 'app.example.text', text: 'unrelated content' } },
+		{ path: '/another-calendar' },
+		{ site: 'https://calendar.example/another-site' },
+		{ site: 'https://calendar.example?redirect=elsewhere' },
+	]) {
+		const { repo, requests, setDocument } = harness()
+		setDocument(existingDocument(overrides))
+		await assert.rejects(repo.readCalendarForEdit(ownCalendarUri), errorCode('invalid-record'))
+		assert.ok(requests.every((item) => !item.body))
+	}
+})
+
+test('a standard document on another site is not silently republished or modified', async () => {
+	const { repo, requests, setDocument } = harness()
+	setDocument(existingDocument({ site: 'https://another.example' }))
+	const snapshot = await repo.readCalendarForEdit(ownCalendarUri)
+	await assert.rejects(
+		repo.updateCalendar(snapshot, { title: '変更', year: 2026, description: '' }),
+		errorCode('invalid-record'),
+	)
+	assert.ok(requests.every((item) => !item.body))
+})
+
+test('creating a calendar requires an explicit HTTP(S) application origin before any PDS write', async () => {
+	const { session, appView, requests } = harness()
+	for (const appOrigin of [
+		undefined,
+		'',
+		'javascript:alert(1)',
+		'at://did:plc:publisher/site.standard.publication/key',
+	]) {
+		const repo = createRepositoryClient(session, appView, { appOrigin })
+		await assert.rejects(
+			repo.createCalendar({ title: '企画', year: 2026, description: '' }),
+			errorCode('invalid-input'),
+		)
+	}
+	assert.equal(requests.length, 0)
+})
+
+const configuredPublication = 'at://did:plc:publisher/site.standard.publication/3lsh3fnlgrk2a'
+
+test('new calendar documents and legacy calendar upgrades use the configured publication without creating it', async () => {
+	for (const mode of ['create', 'legacy'] as const) {
+		const { repo, requests } = harness({ publication: configuredPublication })
+		const value = { title: '企画', year: 2026, description: '説明' }
+		if (mode === 'create') await repo.createCalendar(value)
+		else await repo.updateCalendar(await repo.readCalendarForEdit(ownCalendarUri), value)
+		const writes = requests.at(-1)?.body?.writes as { collection: string; value: Record<string, unknown> }[]
+		assert.equal(writes[1].value.site, configuredPublication)
+		assert.equal(writes[1].value.textContent, '')
+		assert.deepEqual(
+			writes.map((write) => write.collection),
+			[calendarCollection, 'site.standard.document'],
+		)
+	}
+})
+
+test('editing adopts the configured publication for own-site loose documents but preserves an existing publication', async () => {
+	for (const site of ['https://calendar.example', 'at://did:plc:other/site.standard.publication/3lsh3fnlgrk2a']) {
+		const { repo, requests, setDocument } = harness({ publication: configuredPublication })
+		setDocument(existingDocument({ site }))
+		await repo.updateCalendar(await repo.readCalendarForEdit(ownCalendarUri), {
+			title: '更新',
+			year: 2026,
+			description: '',
+		})
+		const writes = requests.at(-1)?.body?.writes as { value: Record<string, unknown> }[]
+		assert.equal(writes[1].value.site, site.startsWith('at://') ? site : configuredPublication)
+	}
+})
+
+test('invalid publication configuration is rejected before writing', async () => {
+	for (const publication of ['', 'https://calendar.example', ownCalendarUri]) {
+		const { repo, requests } = harness({ publication })
+		await assert.rejects(
+			repo.createCalendar({ title: '企画', year: 2026, description: '' }),
+			errorCode('invalid-input'),
+		)
+		assert.equal(requests.length, 0)
+	}
 })
