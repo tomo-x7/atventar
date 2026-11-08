@@ -2,7 +2,17 @@ import type { CalendarEntry, CalendarSheet } from './AdventCalendar'
 
 const authors = ['mori', '佐藤 はる', 'natsuki', '小林', 'yuki', '田中', 'aki']
 // Local sample identicons keep Storybook independent of external avatar hosts.
+const avatarColors = [
+	{ foreground: '#c64d2f', background: '#fff0e5' },
+	{ foreground: '#2d75bb', background: '#e8f2fc' },
+	{ foreground: '#2e8a68', background: '#e8f5ed' },
+	{ foreground: '#b37219', background: '#fff4d6' },
+	{ foreground: '#9b4f9c', background: '#f6eafa' },
+	{ foreground: '#407e91', background: '#e5f3f6' },
+	{ foreground: '#ca586c', background: '#fcebef' },
+]
 const avatars = authors.map((_, authorIndex) => {
+	const { foreground, background } = avatarColors[authorIndex]
 	const cells = Array.from({ length: 25 }, (_, index) => {
 		const x = index % 5
 		const y = Math.floor(index / 5)
@@ -11,7 +21,7 @@ const avatars = authors.map((_, authorIndex) => {
 			? `<rect x="${x * 6 + 5}" y="${y * 6 + 5}" width="6" height="6"/>`
 			: ''
 	}).join('')
-	return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="#eeeeee" d="M0 0h40v40H0z"/><g fill="#666666">${cells}</g></svg>`)}`
+	return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="${background}" d="M0 0h40v40H0z"/><g fill="${foreground}">${cells}</g></svg>`)}`
 })
 const titles = [
 	'小さなWebを作り続ける',
