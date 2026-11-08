@@ -14,9 +14,14 @@
 		"typecheck": "pnpm --filter client exec tsc -b && pnpm --filter @atventar/appview typecheck",
 		"lint": "biome check .",
 		"check": "pnpm lint && pnpm typecheck",
-		"format": "biome format --write ."
+		"format": "biome format --write .",
+		"client": "pnpm --filter client",
+		"appview": "pnpm --filter appview"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.2.3"
+	},
+	"dependencies": {
+		"@atproto/lex": "^0.4.7"
 	}
 }
