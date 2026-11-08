@@ -1,14 +1,17 @@
+@import "../theme.css";
+
 .calendar-directory {
-	--directory-ink: #252525;
-	--directory-accent: #a13c2a;
-	--directory-line: #d9d9d9;
+	--directory-ink: var(--at-color-text);
+	--directory-main: var(--at-color-main);
+	--directory-accent: var(--at-color-accent);
+	--directory-line: var(--at-color-border);
 	box-sizing: border-box;
 	width: 100%;
 	max-width: 1120px;
 	margin-inline: auto;
 	padding: 32px;
 	color: var(--directory-ink);
-	background: #fff;
+	background: var(--at-color-base);
 	font:
 		14px / 1.6 system-ui,
 		sans-serif;
@@ -20,6 +23,7 @@
 	box-sizing: border-box;
 }
 .calendar-directory h1 {
+	color: var(--directory-main);
 	margin: 0;
 	font-size: 28px;
 	line-height: 1.4;
@@ -36,7 +40,7 @@
 	color: inherit;
 	border: 1px solid var(--directory-line);
 	border-radius: 0;
-	background: #fff;
+	background: var(--at-color-base);
 }
 .calendar-directory button {
 	min-height: 38px;
@@ -44,10 +48,10 @@
 	cursor: pointer;
 }
 .calendar-directory button:hover {
-	background: #f2f2f2;
+	background: var(--at-color-hover);
 }
 .calendar-directory :is(button, input, select, a):focus-visible {
-	outline: 2px solid var(--directory-accent);
+	outline: 2px solid var(--directory-main);
 	outline-offset: 3px;
 }
 .directory-heading {
@@ -59,12 +63,13 @@
 	border-bottom: 2px solid var(--directory-ink);
 }
 .calendar-directory .directory-primary {
-	color: #fff;
+	color: var(--at-color-base);
 	background: var(--directory-accent);
 	border-color: var(--directory-accent);
 }
 .calendar-directory .directory-primary:hover {
-	background: #843020;
+	background: var(--at-color-main);
+	border-color: var(--at-color-main);
 }
 .directory-filters {
 	display: flex;
@@ -116,7 +121,7 @@
 .directory-table thead th {
 	font-size: 12px;
 	font-weight: 600;
-	background: #f7f7f7;
+	background: var(--at-color-surface);
 	border-top: 1px solid var(--directory-line);
 	white-space: nowrap;
 }
@@ -135,7 +140,7 @@
 	font-variant-numeric: tabular-nums;
 }
 .calendar-directory .directory-title-button {
-	color: var(--directory-accent);
+	color: var(--directory-main);
 	border: 0;
 	min-height: 0;
 	padding: 0;
@@ -176,7 +181,7 @@
 	place-items: center;
 	width: 44px;
 	height: 44px;
-	background: #eee;
+	background: var(--at-color-placeholder);
 	font-size: 20px;
 	font-weight: 600;
 }
@@ -196,8 +201,8 @@
 	border-bottom: 2px solid transparent;
 }
 .calendar-directory .directory-tabs button[aria-pressed="true"] {
-	color: var(--directory-accent);
-	border-bottom-color: var(--directory-accent);
+	color: var(--directory-main);
+	border-bottom-color: var(--directory-main);
 	font-weight: 650;
 }
 .directory-articles {
@@ -213,7 +218,7 @@
 	border-bottom: 1px solid var(--directory-line);
 }
 .directory-articles a {
-	color: var(--directory-accent);
+	color: var(--directory-main);
 	text-decoration: none;
 	font-weight: 600;
 	overflow-wrap: anywhere;
@@ -232,9 +237,9 @@
 	padding-block: 22px;
 }
 .calendar-directory .directory-years button[aria-pressed="true"] {
-	color: #fff;
-	border-color: var(--directory-accent);
-	background: var(--directory-accent);
+	color: var(--at-color-base);
+	border-color: var(--directory-main);
+	background: var(--directory-main);
 }
 .directory-archive-year {
 	font-size: 18px;
@@ -256,6 +261,7 @@
 		padding: 20px 16px;
 	}
 	.calendar-directory h1 {
+		color: var(--directory-main);
 		font-size: 24px;
 	}
 	.directory-heading {

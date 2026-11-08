@@ -1,0 +1,15 @@
+/* Shared defaults. Override these tokens on a wrapper to theme a subtree.
+   User-supplied avatars retain their own colors. */
+:root {
+	--at-color-base: #fff;
+	--at-color-main: #1f513b;
+	--at-color-accent: #c74432;
+	--at-color-text: #252525;
+	--at-color-muted: #666;
+	--at-color-border: #d9d9d9;
+	--at-color-control-border: #aaa;
+	--at-color-surface: #f7f7f7;
+	--at-color-hover: #f2f2f2;
+	--at-color-placeholder: #eee;
+	--at-color-disabled: #737373;
+}

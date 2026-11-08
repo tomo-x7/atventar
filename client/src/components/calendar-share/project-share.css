@@ -1,10 +1,12 @@
+@import "../theme.css";
+
 .project-share {
 	box-sizing: border-box;
 	width: 100%;
 	max-width: 680px;
 	padding: 28px;
-	color: #252525;
-	background: #fff;
+	color: var(--at-color-text);
+	background: var(--at-color-base);
 	font:
 		14px / 1.6 system-ui,
 		sans-serif;
@@ -15,7 +17,7 @@
 }
 .project-share h2 {
 	margin: 0 0 20px;
-	color: inherit;
+	color: var(--at-color-main);
 	font-size: 20px;
 	font-weight: 650;
 	line-height: 1.4;
@@ -35,10 +37,10 @@
 }
 .project-share textarea,
 .project-share button {
-	border: 1px solid #aaa;
+	border: 1px solid var(--at-color-control-border);
 	border-radius: 0;
 	color: inherit;
-	background: #fff;
+	background: var(--at-color-base);
 	font: inherit;
 }
 .project-share button {
@@ -47,14 +49,14 @@
 	cursor: pointer;
 }
 .project-share button:hover:enabled {
-	background: #f2f2f2;
+	background: var(--at-color-hover);
 }
 .project-share button:disabled {
-	color: #737373;
+	color: var(--at-color-disabled);
 	cursor: wait;
 }
 .project-share :is(button, textarea):focus-visible {
-	outline: 2px solid #a13c2a;
+	outline: 2px solid var(--at-color-main);
 	outline-offset: 3px;
 }
 .project-share-actions {

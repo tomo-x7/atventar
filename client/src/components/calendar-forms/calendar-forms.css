@@ -1,10 +1,12 @@
+@import "../theme.css";
+
 .calendar-form-ui {
 	box-sizing: border-box;
 	width: min(680px, calc(100vw - 32px));
 	max-width: 100%;
 	padding: 28px;
-	background: #fff;
-	color: #252525;
+	background: var(--at-color-base);
+	color: var(--at-color-text);
 	font:
 		14px / 1.6 -apple-system,
 		BlinkMacSystemFont,
@@ -21,6 +23,7 @@
 }
 
 .calendar-form-ui h1 {
+	color: var(--at-color-main);
 	margin: 0 0 28px;
 	font-size: 24px;
 	font-weight: 650;
@@ -48,9 +51,9 @@
 	width: 100%;
 	margin: 0 0 20px;
 	padding: 9px 11px;
-	border: 1px solid #aaaaaa;
+	border: 1px solid var(--at-color-control-border);
 	border-radius: 0;
-	background: #fff;
+	background: var(--at-color-base);
 	color: inherit;
 	font: inherit;
 }
@@ -62,9 +65,9 @@
 .calendar-form-ui button {
 	min-height: 40px;
 	padding: 8px 16px;
-	border: 1px solid #aaaaaa;
+	border: 1px solid var(--at-color-control-border);
 	border-radius: 0;
-	background: #fff;
+	background: var(--at-color-base);
 	color: inherit;
 	font: inherit;
 	font-weight: 600;
@@ -72,7 +75,7 @@
 }
 
 .calendar-form-ui button:hover {
-	background: #f2f2f2;
+	background: var(--at-color-hover);
 }
 
 .calendar-form-ui button:disabled {
@@ -81,17 +84,18 @@
 }
 
 .calendar-form-ui button.calendar-form-ui__primary {
-	border-color: #a13c2a;
-	background: #a13c2a;
-	color: #fff;
+	border-color: var(--at-color-accent);
+	background: var(--at-color-accent);
+	color: var(--at-color-base);
 }
 
 .calendar-form-ui button.calendar-form-ui__primary:hover {
-	background: #843020;
+	background: var(--at-color-main);
+	border-color: var(--at-color-main);
 }
 
 .calendar-form-ui :focus-visible {
-	outline: 2px solid #a13c2a;
+	outline: 2px solid var(--at-color-main);
 	outline-offset: 3px;
 }
 
@@ -110,12 +114,12 @@
 .calendar-form-ui__danger-zone {
 	margin-top: 32px;
 	padding-top: 24px;
-	border-top: 1px solid #d9d9d9;
+	border-top: 1px solid var(--at-color-border);
 }
 
 .calendar-form-ui__details {
 	margin: 0 0 28px;
-	border-top: 1px solid #d9d9d9;
+	border-top: 1px solid var(--at-color-border);
 }
 
 .calendar-form-ui__details > div {
@@ -123,7 +127,7 @@
 	grid-template-columns: 100px minmax(0, 1fr);
 	gap: 12px;
 	padding: 10px 0;
-	border-bottom: 1px solid #d9d9d9;
+	border-bottom: 1px solid var(--at-color-border);
 }
 
 .calendar-form-ui__details dt {
@@ -138,7 +142,7 @@
 .calendar-form-ui output {
 	display: block;
 	margin: 16px 0 0;
-	color: #252525;
+	color: var(--at-color-text);
 }
 
 @media (max-width: 480px) {
@@ -153,6 +157,6 @@
 }
 
 .calendar-form-ui a {
-	color: #252525;
+	color: var(--at-color-text);
 	text-underline-offset: 3px;
 }
