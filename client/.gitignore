@@ -25,3 +25,7 @@ dist-ssr
 
 # Storybook
 storybook-static
+
+# Browser test artifacts
+test-results
+playwright-report
