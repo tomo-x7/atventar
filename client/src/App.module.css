@@ -1,4 +1,6 @@
 .counter {
+	font-family: var(--mono);
+	display: inline-flex;
 	font-size: 16px;
 	padding: 5px 10px;
 	border-radius: 5px;
@@ -68,7 +70,7 @@
 	}
 }
 
-.next-steps {
+.nextSteps {
 	display: flex;
 	border-top: 1px solid var(--border);
 	text-align: left;
@@ -102,7 +104,7 @@
 	}
 }
 
-.next-steps ul {
+.nextSteps ul {
 	list-style: none;
 	padding: 0;
 	display: flex;
@@ -128,7 +130,7 @@
 		&:hover {
 			box-shadow: var(--shadow);
 		}
-		.button-icon {
+		.buttonIcon {
 			height: 18px;
 			width: 18px;
 		}

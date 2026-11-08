@@ -1,19 +1,19 @@
 import { useState } from 'react'
+import styles from './App.module.css'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
-import './App.css'
 
 function App() {
 	const [count, setCount] = useState(0)
 
 	return (
 		<>
-			<section className="center">
-				<div className="hero">
-					<img src={heroImg} className="base" width="170" height="179" alt="" />
-					<img src={reactLogo} className="framework" alt="React logo" />
-					<img src={viteLogo} className="vite" alt="Vite logo" />
+			<section className={styles.center}>
+				<div className={styles.hero}>
+					<img src={heroImg} className={styles.base} width="170" height="179" alt="" />
+					<img src={reactLogo} className={styles.framework} alt="React logo" />
+					<img src={viteLogo} className={styles.vite} alt="Vite logo" />
 				</div>
 				<div>
 					<h1>Get started</h1>
@@ -21,16 +21,16 @@ function App() {
 						Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
 					</p>
 				</div>
-				<button type="button" className="counter" onClick={() => setCount((count) => count + 1)}>
+				<button type="button" className={styles.counter} onClick={() => setCount((count) => count + 1)}>
 					Count is {count}
 				</button>
 			</section>
 
-			<div className="ticks"></div>
+			<div className={styles.ticks}></div>
 
-			<section className="next-steps">
-				<div className="docs">
-					<svg className="icon" role="presentation" aria-hidden="true">
+			<section className={styles.nextSteps}>
+				<div className={styles.docs}>
+					<svg className={styles.icon} role="presentation" aria-hidden="true">
 						<use href="/icons.svg#documentation-icon"></use>
 					</svg>
 					<h2>Documentation</h2>
@@ -38,20 +38,20 @@ function App() {
 					<ul>
 						<li>
 							<a href="https://vite.dev/" target="_blank" rel="noopener">
-								<img className="logo" src={viteLogo} alt="" />
+								<img className={styles.logo} src={viteLogo} alt="" />
 								Explore Vite
 							</a>
 						</li>
 						<li>
 							<a href="https://react.dev/" target="_blank" rel="noopener">
-								<img className="button-icon" src={reactLogo} alt="" />
+								<img className={styles.buttonIcon} src={reactLogo} alt="" />
 								Learn more
 							</a>
 						</li>
 					</ul>
 				</div>
-				<div className="social">
-					<svg className="icon" role="presentation" aria-hidden="true">
+				<div>
+					<svg className={styles.icon} role="presentation" aria-hidden="true">
 						<use href="/icons.svg#social-icon"></use>
 					</svg>
 					<h2>Connect with us</h2>
@@ -59,7 +59,7 @@ function App() {
 					<ul>
 						<li>
 							<a href="https://github.com/vitejs/vite" target="_blank" rel="noopener">
-								<svg className="button-icon" role="presentation" aria-hidden="true">
+								<svg className={styles.buttonIcon} role="presentation" aria-hidden="true">
 									<use href="/icons.svg#github-icon"></use>
 								</svg>
 								GitHub
@@ -67,7 +67,7 @@ function App() {
 						</li>
 						<li>
 							<a href="https://chat.vite.dev/" target="_blank" rel="noopener">
-								<svg className="button-icon" role="presentation" aria-hidden="true">
+								<svg className={styles.buttonIcon} role="presentation" aria-hidden="true">
 									<use href="/icons.svg#discord-icon"></use>
 								</svg>
 								Discord
@@ -75,7 +75,7 @@ function App() {
 						</li>
 						<li>
 							<a href="https://x.com/vite_js" target="_blank" rel="noopener">
-								<svg className="button-icon" role="presentation" aria-hidden="true">
+								<svg className={styles.buttonIcon} role="presentation" aria-hidden="true">
 									<use href="/icons.svg#x-icon"></use>
 								</svg>
 								X.com
@@ -83,7 +83,7 @@ function App() {
 						</li>
 						<li>
 							<a href="https://bsky.app/profile/vite.dev" target="_blank" rel="noopener">
-								<svg className="button-icon" role="presentation" aria-hidden="true">
+								<svg className={styles.buttonIcon} role="presentation" aria-hidden="true">
 									<use href="/icons.svg#bluesky-icon"></use>
 								</svg>
 								Bluesky
@@ -93,8 +93,8 @@ function App() {
 				</div>
 			</section>
 
-			<div className="ticks"></div>
-			<section className="spacer"></section>
+			<div className={styles.ticks}></div>
+			<section className={styles.spacer}></section>
 		</>
 	)
 }
