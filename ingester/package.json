@@ -1,0 +1,24 @@
+{
+	"name": "@atventar/ingester",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"engines": {
+		"node": ">=24"
+	},
+	"scripts": {
+		"dev": "node --import tsx --env-file-if-exists=.env src/index.ts",
+		"start": "node --env-file-if-exists=.env dist/index.js",
+		"build": "tsc -p tsconfig.build.json",
+		"typecheck": "tsc --noEmit",
+		"test": "node --import tsx --test test/*.test.ts"
+	},
+	"dependencies": {
+		"@bsky/jetstream": "^1.0.0"
+	},
+	"devDependencies": {
+		"@types/node": "^24.19.2",
+		"tsx": "^4.23.15",
+		"typescript": "~7.0.2"
+	}
+}

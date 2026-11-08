@@ -7,21 +7,32 @@
 		"node": ">=24"
 	},
 	"scripts": {
-		"dev": "pnpm -r --parallel --stream run dev",
+		"lexgen": "pnpm -r run lexgen",
+		"dev": "pnpm --filter client --filter @atventar/appview --parallel --stream run dev",
 		"dev:client": "pnpm --filter client dev",
 		"dev:appview": "pnpm --filter @atventar/appview dev",
-		"build": "pnpm -r run build",
-		"typecheck": "pnpm --filter client exec tsc -b && pnpm --filter @atventar/appview typecheck",
+		"build": "pnpm --filter client build && pnpm --filter @atventar/appview build",
+		"typecheck": "pnpm --filter client exec tsc -b && pnpm --filter @atventar/appview typecheck && pnpm --filter @atventar/ingester typecheck",
 		"lint": "biome check .",
 		"check": "pnpm lint && pnpm typecheck",
 		"format": "biome format --write .",
 		"client": "pnpm --filter client",
-		"appview": "pnpm --filter appview"
+		"appview": "pnpm --filter @atventar/appview",
+		"cf:types": "wrangler types appview/worker-configuration.d.ts",
+		"cf:types:check": "wrangler types appview/worker-configuration.d.ts --check",
+		"deploy": "wrangler deploy --no-bundle dist/index.js",
+		"db:generate": "pnpm --filter @atventar/appview db:generate",
+		"db:migrate:local": "wrangler d1 migrations apply DB --local",
+		"db:migrate:remote": "wrangler d1 migrations apply DB --remote",
+		"dev:ingester": "pnpm --filter @atventar/ingester dev",
+		"build:ingester": "pnpm --filter @atventar/ingester build",
+		"test": "pnpm --filter @atventar/appview test && pnpm --filter @atventar/ingester test"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.2.3"
 	},
 	"dependencies": {
-		"@atproto/lex": "^0.4.7"
+		"@atproto/lex": "^0.4.7",
+		"wrangler": "^4.158.0"
 	}
 }

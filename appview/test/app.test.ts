@@ -3,6 +3,9 @@ import { readFile } from 'node:fs/promises'
 import { after, before, beforeEach, test } from 'node:test'
 import { drizzle } from 'drizzle-orm/d1'
 import { Miniflare } from 'miniflare'
+import { loadConfig } from '../../ingester/src/config.js'
+import { deliverOnce } from '../../ingester/src/delivery.js'
+import { Outbox } from '../../ingester/src/outbox.js'
 import { app } from '../src/app.js'
 import { records } from '../src/db/schema.js'
 import type { Record as CalendarRecord } from '../src/lexicons/types/win/tomo-x/atventar/calendar.js'
@@ -348,5 +351,29 @@ test('batch rejects invalid records before writes and rolls back on SQL failure'
 		assert.equal((await db.select().from(records)).length, 0)
 	} finally {
 		await binding.prepare('DROP TRIGGER fail_second').run()
+	}
+})
+
+test('ingester delivers its durable outbox through the AppView batch endpoint into D1', async () => {
+	const box = new Outbox(':memory:', 'integration', 1024 * 1024)
+	try {
+		const data = { ...event(), operation: 'upsert' as const }
+		box.enqueue(10, { seq: 10 }, data)
+		const config = loadConfig({ APPVIEW_URL: 'https://example.com', INGEST_TOKEN: 'test-token' })
+		const delivered = await deliverOnce(
+			box,
+			config,
+			new AbortController().signal,
+			() => {},
+			async (input, init) => {
+				return app.request(String(input), init, { DB: binding, INGEST_TOKEN: 'test-token' })
+			},
+		)
+		assert.equal(delivered, true)
+		assert.equal(box.peek(32).length, 0)
+		assert.equal(box.checkpoint().seq, 10)
+		assert.equal((await new Service(binding).getCalendar(calendarUri)).calendar.record.title, 'Imported')
+	} finally {
+		box.close()
 	}
 })
