@@ -11,7 +11,7 @@ const avatars = authors.map((_, authorIndex) => {
 			? `<rect x="${x * 6 + 5}" y="${y * 6 + 5}" width="6" height="6"/>`
 			: ''
 	}).join('')
-	return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="#e9eeea" d="M0 0h40v40H0z"/><g fill="#436451">${cells}</g></svg>`)}`
+	return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="#eeeeee" d="M0 0h40v40H0z"/><g fill="#666666">${cells}</g></svg>`)}`
 })
 const titles = [
 	'小さなWebを作り続ける',

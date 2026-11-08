@@ -117,3 +117,33 @@ export const Sheet: StoryObj<typeof AdventCalendar> = {
 		</div>
 	),
 }
+
+export const PublishedAndReserved: Story = {
+	name: '公開済みと参加予定',
+	args: {
+		sheets: [
+			{
+				id: 'publication',
+				number: 1,
+				entries: [
+					{
+						day: 1,
+						author: 'mori',
+						authorAvatarUrl: sampleSheets[0].entries[0].authorAvatarUrl,
+						title: '今年作ったものと学んだこと',
+						status: 'published',
+						url: 'https://example.com/article',
+					},
+					{
+						day: 2,
+						author: '佐藤 はる',
+						authorAvatarUrl: sampleSheets[0].entries[1].authorAvatarUrl,
+						title: 'デザインシステムの設計について書きます',
+						status: 'reserved',
+					},
+					{ day: 3, author: 'natsuki', title: 'これから取り組みたい個人開発', status: 'scheduled' },
+				],
+			},
+		],
+	},
+}

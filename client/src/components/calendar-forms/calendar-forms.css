@@ -4,7 +4,7 @@
 	max-width: 100%;
 	padding: 28px;
 	background: #fff;
-	color: #222925;
+	color: #252525;
 	font:
 		14px / 1.6 -apple-system,
 		BlinkMacSystemFont,
@@ -47,7 +47,7 @@
 	width: 100%;
 	margin: 0 0 20px;
 	padding: 9px 11px;
-	border: 1px solid #a5aea8;
+	border: 1px solid #aaaaaa;
 	border-radius: 0;
 	background: #fff;
 	color: inherit;
@@ -61,7 +61,7 @@
 .calendar-form-ui button {
 	min-height: 40px;
 	padding: 8px 16px;
-	border: 1px solid #a5aea8;
+	border: 1px solid #aaaaaa;
 	border-radius: 0;
 	background: #fff;
 	color: inherit;
@@ -71,7 +71,7 @@
 }
 
 .calendar-form-ui button:hover {
-	background: #f0f3f1;
+	background: #f2f2f2;
 }
 
 .calendar-form-ui button:disabled {
@@ -80,17 +80,17 @@
 }
 
 .calendar-form-ui button.calendar-form-ui__primary {
-	border-color: #245d45;
-	background: #245d45;
+	border-color: #252525;
+	background: #252525;
 	color: #fff;
 }
 
 .calendar-form-ui button.calendar-form-ui__primary:hover {
-	background: #194732;
+	background: #111111;
 }
 
 .calendar-form-ui :focus-visible {
-	outline: 2px solid #245d45;
+	outline: 2px solid #252525;
 	outline-offset: 3px;
 }
 
@@ -109,12 +109,12 @@
 .calendar-form-ui__danger-zone {
 	margin-top: 32px;
 	padding-top: 24px;
-	border-top: 1px solid #dce1dd;
+	border-top: 1px solid #d9d9d9;
 }
 
 .calendar-form-ui__details {
 	margin: 0 0 28px;
-	border-top: 1px solid #dce1dd;
+	border-top: 1px solid #d9d9d9;
 }
 
 .calendar-form-ui__details > div {
@@ -122,7 +122,7 @@
 	grid-template-columns: 100px minmax(0, 1fr);
 	gap: 12px;
 	padding: 10px 0;
-	border-bottom: 1px solid #dce1dd;
+	border-bottom: 1px solid #d9d9d9;
 }
 
 .calendar-form-ui__details dt {
@@ -136,7 +136,7 @@
 
 .calendar-form-ui [role="status"] {
 	margin: 16px 0 0;
-	color: #245d45;
+	color: #252525;
 }
 
 @media (max-width: 480px) {

@@ -42,3 +42,5 @@ Storybook には空・登録済みの日・長文・モバイル・送信中・�
 画面構成の参考: [Adventar](https://adventar.org/)、[過去のカレンダー](https://adventar.org/archive)、[ヘルプ](https://adventar.org/help)。サンプルのカレンダー・参加者・記事は架空のデータです。
 
 lint・format はルートの Biome 共通設定を使います。`pnpm dev` / `pnpm preview` は既存の Vite アプリを起動します。今回の UI は `pnpm storybook` で確認してください。
+
+UI は白・黒・グレーを基調とし、ユーザーアイコンは丸く表示します。公開済みの記事がある日付セルには折り返した紙の角を付け、参加予定や公開待ちには付けません。

@@ -74,7 +74,11 @@ export function AdventCalendar({ sheet, year, today, readOnly, onJoin, onEditEnt
 								<li key={day} style={day === 1 ? { gridColumnStart: firstWeekday + 1 } : undefined}>
 									<button
 										type="button"
-										aria-label={entry ? `12月${day}日 ${entry.author}の登録を表示` : `12月${day}日の空き枠を表示`}
+										aria-label={
+											entry
+												? `12月${day}日 ${entry.author}の${entry.status === 'published' ? '公開済み記事' : '登録'}を表示`
+												: `12月${day}日の空き枠を表示`
+										}
 										aria-current={today === day ? 'date' : undefined}
 										aria-pressed={selectedDay === day}
 										onClick={() => {
@@ -84,6 +88,7 @@ export function AdventCalendar({ sheet, year, today, readOnly, onJoin, onEditEnt
 											row?.scrollIntoView({ block: 'center', behavior: 'auto' })
 										}}
 									>
+										{entry?.status === 'published' && <span className="ac-published-mark" aria-hidden="true" />}
 										<span className="ac-mini-date">{day}</span>
 										{entry ? (
 											<UserAvatar entry={entry} />
