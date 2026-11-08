@@ -6,8 +6,8 @@
 		"Segoe UI",
 		"Noto Sans JP",
 		sans-serif;
-	color: #252525;
-	background: white;
+	color: #302922;
+	background: #fffdf8;
 }
 .service-ui * {
 	box-sizing: border-box;
@@ -21,7 +21,7 @@
 }
 .service-ui :focus-visible,
 .service-page :focus-visible {
-	outline: 2px solid #252525;
+	outline: 2px solid #a13c2a;
 	outline-offset: 3px;
 }
 .service-header {
@@ -30,7 +30,7 @@
 	gap: 32px;
 	min-height: 66px;
 	padding: 0 32px;
-	border-bottom: 1px solid #d9d9d9;
+	border-bottom: 1px solid #ded5c8;
 }
 .service-header button,
 .service-footer button {
@@ -44,21 +44,21 @@
 	letter-spacing: -0.06em;
 }
 .service-brand span {
-	color: #252525;
+	color: #a13c2a;
 }
 .service-header nav {
 	display: flex;
 	gap: 24px;
 }
 .service-header nav button[aria-current="page"] {
-	box-shadow: inset 0 -2px #252525;
-	color: #252525;
+	box-shadow: inset 0 -2px #a13c2a;
+	color: #a13c2a;
 }
 .service-account {
 	margin-left: auto;
 }
 .service-footer {
-	border-top: 1px solid #d9d9d9;
+	border-top: 1px solid #ded5c8;
 	margin: 32px 32px 0;
 	padding: 12px 0;
 	display: flex;
@@ -76,11 +76,11 @@
 	font-weight: 650;
 }
 .service-page details {
-	border-top: 1px solid #d9d9d9;
+	border-top: 1px solid #ded5c8;
 	padding: 16px 0;
 }
 .service-page details:last-child {
-	border-bottom: 1px solid #d9d9d9;
+	border-bottom: 1px solid #ded5c8;
 }
 .service-page summary {
 	cursor: pointer;
@@ -97,16 +97,16 @@
 	justify-content: center;
 }
 .service-state button {
-	border: 1px solid #d9d9d9;
+	border: 1px solid #ded5c8;
 	padding: 8px 16px;
-	background: white;
+	background: #fffdf8;
 }
 .service-skip {
 	position: absolute;
 	left: 16px;
 	top: -100px;
-	color: #252525;
-	background: white;
+	color: #a13c2a;
+	background: #fffdf8;
 	padding: 8px;
 	z-index: 2;
 }

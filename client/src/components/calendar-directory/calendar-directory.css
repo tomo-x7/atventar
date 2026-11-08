@@ -1,14 +1,14 @@
 .calendar-directory {
-	--directory-ink: #252525;
-	--directory-accent: #252525;
-	--directory-line: #d9d9d9;
+	--directory-ink: #302922;
+	--directory-accent: #a13c2a;
+	--directory-line: #ded5c8;
 	box-sizing: border-box;
 	width: 100%;
 	max-width: 1120px;
 	margin-inline: auto;
 	padding: 32px;
 	color: var(--directory-ink);
-	background: #fff;
+	background: #fffdf8;
 	font:
 		14px / 1.6 system-ui,
 		sans-serif;
@@ -36,7 +36,7 @@
 	color: inherit;
 	border: 1px solid var(--directory-line);
 	border-radius: 0;
-	background: #fff;
+	background: #fffdf8;
 }
 .calendar-directory button {
 	min-height: 38px;
@@ -44,7 +44,7 @@
 	cursor: pointer;
 }
 .calendar-directory button:hover {
-	background: #f2f2f2;
+	background: #f4ede2;
 }
 .calendar-directory :is(button, input, select, a):focus-visible {
 	outline: 2px solid var(--directory-accent);
@@ -64,7 +64,7 @@
 	border-color: var(--directory-accent);
 }
 .calendar-directory .directory-primary:hover {
-	background: #111111;
+	background: #843020;
 }
 .directory-filters {
 	display: flex;
@@ -116,7 +116,7 @@
 .directory-table thead th {
 	font-size: 12px;
 	font-weight: 600;
-	background: #f7f7f7;
+	background: #f8f3eb;
 	border-top: 1px solid var(--directory-line);
 	white-space: nowrap;
 }
@@ -176,7 +176,7 @@
 	place-items: center;
 	width: 44px;
 	height: 44px;
-	background: #eeeeee;
+	background: #efe7dc;
 	font-size: 20px;
 	font-weight: 600;
 }

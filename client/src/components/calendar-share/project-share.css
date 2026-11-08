@@ -3,8 +3,8 @@
 	width: 100%;
 	max-width: 680px;
 	padding: 28px;
-	color: #252525;
-	background: #fff;
+	color: #302922;
+	background: #fffdf8;
 	font:
 		14px / 1.6 system-ui,
 		sans-serif;
@@ -38,7 +38,7 @@
 	border: 1px solid #aaa;
 	border-radius: 0;
 	color: inherit;
-	background: #fff;
+	background: #fffdf8;
 	font: inherit;
 }
 .project-share button {
@@ -47,14 +47,14 @@
 	cursor: pointer;
 }
 .project-share button:hover:enabled {
-	background: #f2f2f2;
+	background: #f4ede2;
 }
 .project-share button:disabled {
 	color: #737373;
 	cursor: wait;
 }
 .project-share :is(button, textarea):focus-visible {
-	outline: 2px solid #252525;
+	outline: 2px solid #a13c2a;
 	outline-offset: 3px;
 }
 .project-share-actions {

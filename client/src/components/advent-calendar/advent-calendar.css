@@ -1,16 +1,17 @@
 .ac-root,
 .ac-sheet {
-	--ac-ink: #252525;
-	--ac-muted: #666;
-	--ac-line: #d9d9d9;
+	--ac-ink: #302922;
+	--ac-accent: #a13c2a;
+	--ac-muted: #71675c;
+	--ac-line: #ded5c8;
 	font:
-		14px / 1.6 -apple-system,
+		0.875rem / 1.6 -apple-system,
 		BlinkMacSystemFont,
 		"Segoe UI",
 		"Noto Sans JP",
 		sans-serif;
 	color: var(--ac-ink);
-	background: white;
+	background: #fffdf8;
 	box-sizing: border-box;
 }
 .ac-root *,
@@ -35,7 +36,7 @@
 }
 .ac-root :focus-visible,
 .ac-sheet :focus-visible {
-	outline: 2px solid var(--ac-ink);
+	outline: 2px solid var(--ac-accent);
 	outline-offset: 3px;
 }
 .ac-heading-top,
@@ -49,16 +50,16 @@
 	gap: 12px;
 }
 .ac-year {
-	font-size: 13px;
+	font-size: 0.8125rem;
 	font-weight: 600;
 	letter-spacing: 0.08em;
 }
 .ac-collection-heading {
-	border-top: 3px solid var(--ac-ink);
+	border-top: 3px solid var(--ac-accent);
 	padding-top: 16px;
 }
 .ac-collection-heading h1 {
-	font-size: clamp(24px, 3vw, 36px);
+	font-size: clamp(1.5rem, 3vw, 2.25rem);
 	line-height: 1.4;
 	letter-spacing: -0.03em;
 	margin: 20px 0 14px;
@@ -95,22 +96,22 @@
 	align-items: center;
 	justify-content: center;
 	border: 1px solid var(--ac-line);
-	background: white;
+	background: #fffdf8;
 	color: var(--ac-ink);
 	padding: 7px 14px;
 	min-height: 40px;
 	text-decoration: none;
 }
 .ac-button:hover {
-	background: #f2f2f2;
+	background: #f4ede2;
 }
 .ac-root .ac-button-primary {
 	color: white;
-	background: var(--ac-ink);
-	border-color: var(--ac-ink);
+	background: var(--ac-accent);
+	border-color: var(--ac-accent);
 }
 .ac-root .ac-button-primary:hover {
-	background: #111;
+	background: #843020;
 }
 .ac-card-grid {
 	display: grid;
@@ -125,17 +126,17 @@
 	text-decoration: none;
 }
 .ac-card:hover {
-	border-color: var(--ac-ink);
+	border-color: var(--ac-accent);
 }
 .ac-card-heading {
 	margin-bottom: 12px;
 }
 .ac-card-heading h2 {
-	font-size: 17px;
+	font-size: 1.0625rem;
 	margin: 0;
 }
 .ac-card-heading > span {
-	font-size: 13px;
+	font-size: 0.8125rem;
 	font-variant-numeric: tabular-nums;
 }
 .ac-card-days {
@@ -157,10 +158,10 @@
 	padding: 4px;
 	border-bottom: 1px solid var(--ac-line);
 	border-right: 1px solid var(--ac-line);
-	font-size: 11px;
+	font-size: 0.6875rem;
 }
 .ac-card-days li[data-filled="false"] {
-	background: #f7f7f7;
+	background: #f8f3eb;
 }
 .ac-avatar {
 	display: inline-flex;
@@ -169,9 +170,9 @@
 	justify-content: center;
 	width: 32px;
 	height: 32px;
-	background: #eee;
+	background: #efe7dc;
 	color: var(--ac-ink);
-	font-size: 14px;
+	font-size: 0.875rem;
 	line-height: 1;
 	font-weight: 600;
 	overflow: hidden;
@@ -187,7 +188,7 @@
 .ac-card-empty {
 	width: 24px;
 	height: 24px;
-	font-size: 12px;
+	font-size: 0.75rem;
 }
 .ac-card-empty {
 	display: flex;
@@ -215,15 +216,15 @@
 	text-decoration: none;
 }
 .ac-sheet-navigation a[aria-current="page"] {
-	background: var(--ac-ink);
-	border-color: var(--ac-ink);
+	background: var(--ac-accent);
+	border-color: var(--ac-accent);
 	color: white;
 }
 .ac-detail-heading {
 	margin-bottom: 20px;
 }
 .ac-detail-heading h2 {
-	font-size: 20px;
+	font-size: 1.25rem;
 	margin: 0;
 }
 .ac-sheet {
@@ -231,7 +232,7 @@
 }
 .ac-month h2,
 .ac-articles h2 {
-	font-size: 17px;
+	font-size: 1.0625rem;
 	margin: 0 0 14px;
 }
 .ac-month {
@@ -246,7 +247,7 @@
 }
 .ac-weekdays {
 	text-align: center;
-	font-size: 12px;
+	font-size: 0.75rem;
 	padding-bottom: 8px;
 }
 .ac-month-days {
@@ -266,24 +267,24 @@
 	height: 100%;
 	width: 100%;
 	border: 1px solid var(--ac-line);
-	background: white;
+	background: #fffdf8;
 	text-decoration: none;
 	overflow-wrap: anywhere;
 }
 .ac-month-days a:hover {
-	background: #f7f7f7;
+	background: #f8f3eb;
 }
 .ac-month-days a[aria-current="date"] {
-	border-bottom: 3px solid var(--ac-ink);
+	border-bottom: 3px solid var(--ac-accent);
 	padding-bottom: 6px;
 }
 .ac-month-days a[data-selected="true"] {
-	outline: 2px solid var(--ac-ink);
+	outline: 2px solid var(--ac-accent);
 	outline-offset: -2px;
-	background: #eee;
+	background: #efe7dc;
 }
 .ac-calendar-date {
-	font-size: 16px;
+	font-size: 1rem;
 	line-height: 1.3;
 	font-variant-numeric: tabular-nums;
 }
@@ -292,7 +293,7 @@
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
-	font-size: 13px;
+	font-size: 0.8125rem;
 	text-align: center;
 }
 .ac-status {
@@ -316,10 +317,10 @@
 	scroll-margin-block: 20px;
 }
 .ac-day[data-selected="true"] {
-	background: #f7f7f7;
+	background: #f8f3eb;
 }
 .ac-day time {
-	font-size: 22px;
+	font-size: 1.375rem;
 	font-weight: 550;
 	line-height: 1.4;
 	font-variant-numeric: tabular-nums;
@@ -332,24 +333,24 @@
 	align-items: center;
 	flex-wrap: wrap;
 	gap: 8px;
-	font-size: 13px;
+	font-size: 0.8125rem;
 	margin-bottom: 6px;
 	font-weight: 600;
 }
 .ac-author .ac-avatar {
 	width: 24px;
 	height: 24px;
-	font-size: 12px;
+	font-size: 0.75rem;
 }
 .ac-entry-status {
 	border: 1px solid var(--ac-line);
 	padding: 0 5px;
-	font-size: 11px;
+	font-size: 0.6875rem;
 	font-weight: 400;
 }
 .ac-comment {
 	margin: 6px 0 0;
-	font-size: 13px;
+	font-size: 0.8125rem;
 }
 
 .ac-day-actions {
@@ -365,7 +366,7 @@
 	padding: 10px 4px;
 	min-height: 44px;
 	min-width: 44px;
-	font-size: 13px;
+	font-size: 0.8125rem;
 	text-align: center;
 	text-decoration: underline;
 }
@@ -379,7 +380,7 @@
 	right: 0;
 	width: 0;
 	height: 0;
-	border-top: 12px solid var(--ac-ink);
+	border-top: 12px solid var(--ac-accent);
 	border-left: 12px solid transparent;
 	pointer-events: none;
 }
@@ -396,14 +397,15 @@
 }
 @media (max-width: 600px) {
 	.ac-root {
-		padding: 20px 16px;
+		padding: 14px 12px;
 	}
 	.ac-heading-top {
 		flex-wrap: wrap;
 	}
 	.ac-toolbar {
-		gap: 8px 12px;
-		margin: 20px 0;
+		gap: 6px 12px;
+		margin: 14px 0;
+		padding: 8px 0;
 	}
 	.ac-project-actions {
 		width: 100%;
@@ -411,13 +413,14 @@
 	}
 	.ac-card-grid {
 		grid-template-columns: minmax(0, 1fr);
+		gap: 12px;
 	}
 	.ac-month-days {
 		gap: 2px;
 	}
 	.ac-month-days a {
 		padding: 6px 2px;
-		min-height: 102px;
+		min-height: 90px;
 		gap: 4px;
 	}
 	.ac-month-days a[aria-current="date"] {
@@ -432,17 +435,17 @@
 		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
-		font-size: 11px;
+		font-size: 0.6875rem;
 	}
 	.ac-day {
 		gap: 10px;
 		grid-template-columns: 26px minmax(0, 1fr) auto;
 	}
 	.ac-day time {
-		font-size: 21px;
+		font-size: 1.125rem;
 	}
 	.ac-entry {
-		font-size: 15px;
+		font-size: 0.875rem;
 	}
 	.ac-day-actions {
 		flex-direction: column;
@@ -456,7 +459,7 @@
 	margin-top: 24px;
 }
 .ac-participation h2 {
-	font-size: 20px;
+	font-size: 1.25rem;
 	overflow-wrap: anywhere;
 }
 .ac-placement {
@@ -470,4 +473,56 @@
 .ac-day[data-filled="false"] {
 	min-height: 60px;
 	align-items: center;
+}
+
+.ac-card-heading h2,
+.ac-weekdays > span:first-child {
+	color: var(--ac-accent);
+}
+.ac-sheet .ac-article,
+.ac-sheet .ac-join {
+	color: var(--ac-accent);
+}
+@media (max-width: 600px) {
+	.ac-collection-heading {
+		padding-top: 10px;
+	}
+	.ac-collection-heading h1 {
+		font-size: 1.375rem;
+		margin: 12px 0 8px;
+	}
+	.ac-year {
+		font-size: 0.75rem;
+	}
+	.ac-details {
+		gap: 6px;
+	}
+	.ac-root .ac-card {
+		padding: 12px;
+	}
+	.ac-card-heading {
+		margin-bottom: 8px;
+	}
+	.ac-card-heading h2 {
+		font-size: 0.9375rem;
+	}
+	.ac-card-heading > span {
+		font-size: 0.75rem;
+	}
+	.ac-card-days li {
+		min-height: 44px;
+		padding: 3px;
+		gap: 1px;
+	}
+	.ac-card-days .ac-avatar,
+	.ac-card-empty {
+		width: 20px;
+		height: 20px;
+	}
+	.ac-detail-heading {
+		margin-bottom: 14px;
+	}
+	.ac-detail-heading h2 {
+		font-size: 1.125rem;
+	}
 }
