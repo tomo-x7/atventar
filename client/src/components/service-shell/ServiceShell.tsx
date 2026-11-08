@@ -1,5 +1,6 @@
 import { type ReactNode, useId } from 'react'
-import './service-shell.css'
+import styles from './ServiceShell.module.css'
+import '../theme.css'
 
 export type ServiceDestination = 'calendars' | 'archive' | 'help' | 'profile' | 'login'
 
@@ -16,12 +17,12 @@ export function ServiceShell({
 }) {
 	const id = useId()
 	return (
-		<div className="service-ui">
-			<a className="service-skip" href={`#${id}`}>
+		<div className={styles.root}>
+			<a className={styles.skip} href={`#${id}`}>
 				本文へ
 			</a>
-			<header className="service-header">
-				<button type="button" className="service-brand" onClick={() => onNavigate('calendars')}>
+			<header className={styles.header}>
+				<button type="button" className={styles.brand} onClick={() => onNavigate('calendars')}>
 					atventar<span aria-hidden="true"> /</span>
 				</button>
 				<nav aria-label="メイン">
@@ -42,14 +43,14 @@ export function ServiceShell({
 						</button>
 					))}
 				</nav>
-				<button className="service-account" type="button" onClick={() => onNavigate(user ? 'profile' : 'login')}>
+				<button className={styles.account} type="button" onClick={() => onNavigate(user ? 'profile' : 'login')}>
 					{user ?? 'ログイン'}
 				</button>
 			</header>
 			<div id={id} tabIndex={-1}>
 				{children}
 			</div>
-			<footer className="service-footer">
+			<footer className={styles.footer}>
 				<span>atventar</span>
 				<button type="button" onClick={() => onNavigate('help')}>
 					ヘルプ
@@ -61,7 +62,7 @@ export function ServiceShell({
 
 export function ServiceHelp() {
 	return (
-		<section className="service-page">
+		<section className={styles.page}>
 			<h1>ヘルプ</h1>
 			{[
 				['アドベントカレンダーとは？', '12月1日から25日まで、参加者が1日ずつ記事を公開する企画です。'],
@@ -97,7 +98,7 @@ export function ServiceHelp() {
 
 export function ServiceState({ state, onRetry }: { state: 'loading' | 'error' | 'not-found'; onRetry?: () => void }) {
 	return (
-		<section className="service-page service-state" aria-busy={state === 'loading'}>
+		<section className={`${styles.page} ${styles.state}`} aria-busy={state === 'loading'}>
 			{state === 'loading' ? (
 				<output>読み込み中…</output>
 			) : (

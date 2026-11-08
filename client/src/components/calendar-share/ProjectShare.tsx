@@ -1,5 +1,6 @@
 import { useId, useState } from 'react'
-import './project-share.css'
+import '../theme.css'
+import styles from './ProjectShare.module.css'
 
 export interface ProjectShareContent {
 	projectName: string
@@ -68,11 +69,11 @@ export function ProjectShare({ onShare, ...content }: ProjectShareProps) {
 		}
 	}
 	return (
-		<section className="project-share" aria-labelledby={`${id}-heading`}>
+		<section className={styles.root} aria-labelledby={`${id}-heading`}>
 			<h2 id={`${id}-heading`}>共有</h2>
 			<label htmlFor={`${id}-text`}>共有文</label>
 			<textarea id={`${id}-text`} readOnly value={payload.text} rows={content.isParticipant ? 4 : 3} />
-			<div className="project-share-actions">
+			<div className={styles.actions}>
 				<button type="button" onClick={copy} disabled={pending}>
 					コピー
 				</button>
@@ -82,7 +83,7 @@ export function ProjectShare({ onShare, ...content }: ProjectShareProps) {
 					</button>
 				)}
 			</div>
-			{result?.text === payload.text && <output className="project-share-result">{result.message}</output>}
+			{result?.text === payload.text && <output className={styles.result}>{result.message}</output>}
 		</section>
 	)
 }

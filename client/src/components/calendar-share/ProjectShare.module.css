@@ -1,6 +1,4 @@
-@import "../theme.css";
-
-.project-share {
+.root {
 	box-sizing: border-box;
 	width: 100%;
 	max-width: 680px;
@@ -12,22 +10,22 @@
 		sans-serif;
 	text-align: left;
 }
-.project-share * {
+.root * {
 	box-sizing: border-box;
 }
-.project-share h2 {
+.root h2 {
 	margin: 0 0 20px;
 	color: var(--at-color-main);
 	font-size: 20px;
 	font-weight: 650;
 	line-height: 1.4;
 }
-.project-share label {
+.root label {
 	display: block;
 	margin-bottom: 6px;
 	font-weight: 600;
 }
-.project-share textarea {
+.root textarea {
 	display: block;
 	width: 100%;
 	min-height: 112px;
@@ -35,42 +33,42 @@
 	resize: vertical;
 	overflow-wrap: anywhere;
 }
-.project-share textarea,
-.project-share button {
+.root textarea,
+.root button {
 	border: 1px solid var(--at-color-control-border);
 	border-radius: 0;
 	color: inherit;
 	background: var(--at-color-base);
 	font: inherit;
 }
-.project-share button {
+.root button {
 	min-height: 38px;
 	padding: 7px 16px;
 	cursor: pointer;
 }
-.project-share button:hover:enabled {
+.root button:hover:enabled {
 	background: var(--at-color-hover);
 }
-.project-share button:disabled {
+.root button:disabled {
 	color: var(--at-color-disabled);
 	cursor: wait;
 }
-.project-share :is(button, textarea):focus-visible {
+.root :is(button, textarea):focus-visible {
 	outline: 2px solid var(--at-color-main);
 	outline-offset: 3px;
 }
-.project-share-actions {
+.actions {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px;
 	margin-top: 14px;
 }
-.project-share-result {
+.result {
 	display: block;
 	margin-top: 12px;
 }
 @media (max-width: 600px) {
-	.project-share {
+	.root {
 		padding: 20px 16px;
 	}
 }

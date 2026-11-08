@@ -1,5 +1,6 @@
 import { type MouseEvent, useId, useRef, useState } from 'react'
-import './advent-calendar.css'
+import styles from './AdventCalendar.module.css'
+import '../theme.css'
 
 export type CalendarEntry = {
 	/** The participation record URI stays the same when its calendar position changes. */
@@ -38,9 +39,9 @@ export type AdventCalendarProps = CalendarNavigation & {
 function CalendarDate({ year, day }: { year: number; day: number }) {
 	return (
 		<time dateTime={`${year}-12-${String(day).padStart(2, '0')}`}>
-			<span className="ac-visually-hidden">12月</span>
+			<span className={styles.visuallyHidden}>12月</span>
 			{day}
-			<span className="ac-visually-hidden">日</span>
+			<span className={styles.visuallyHidden}>日</span>
 		</time>
 	)
 }
@@ -48,7 +49,7 @@ function CalendarDate({ year, day }: { year: number; day: number }) {
 function UserAvatar({ entry }: { entry: CalendarEntry }) {
 	const [failedUrl, setFailedUrl] = useState<string>()
 	return (
-		<span className="ac-avatar" aria-hidden="true">
+		<span className={styles.avatar} aria-hidden="true">
 			{entry.authorAvatarUrl && failedUrl !== entry.authorAvatarUrl ? (
 				<img
 					src={entry.authorAvatarUrl}
@@ -87,15 +88,15 @@ export function AdventCalendar({
 	// Calendar arithmetic uses the supplied year, not the device's current clock.
 	const firstWeekday = new Date(Date.UTC(year, 11, 1)).getUTCDay()
 	return (
-		<section className="ac-sheet" aria-label={`${sheet.number}枚目のカレンダー`}>
-			<section className="ac-month" aria-labelledby={`${id}-month`}>
+		<section className={styles.sheet} aria-label={`${sheet.number}枚目のカレンダー`}>
+			<section className={styles.month} aria-labelledby={`${id}-month`}>
 				<h2 id={`${id}-month`}>12月</h2>
-				<div className="ac-weekdays" aria-hidden="true">
+				<div className={styles.weekdays} aria-hidden="true">
 					{['日', '月', '火', '水', '木', '金', '土'].map((weekday) => (
 						<span key={weekday}>{weekday}</span>
 					))}
 				</div>
-				<ol className="ac-month-days">
+				<ol className={styles.monthDays}>
 					{days.map((day) => {
 						const entry = sheet.entries.find((item) => item.day === day)
 						return (
@@ -125,15 +126,15 @@ export function AdventCalendar({
 										}
 									}}
 								>
-									{entry?.status === 'published' && <span className="ac-published-mark" aria-hidden="true" />}
-									<span className="ac-calendar-date">{day}</span>
+									{entry?.status === 'published' && <span className={styles.publishedMark} aria-hidden="true" />}
+									<span className={styles.calendarDate}>{day}</span>
 									{entry ? (
 										<>
 											<UserAvatar entry={entry} />
-											<span className="ac-calendar-name">{entry.author}</span>
+											<span className={styles.calendarName}>{entry.author}</span>
 										</>
 									) : (
-										<span className="ac-status">空き</span>
+										<span className={styles.status}>空き</span>
 									)}
 								</a>
 							</li>
@@ -141,9 +142,9 @@ export function AdventCalendar({
 					})}
 				</ol>
 			</section>
-			<section className="ac-articles" aria-labelledby={`${id}-articles`}>
+			<section className={styles.articles} aria-labelledby={`${id}-articles`}>
 				<h2 id={`${id}-articles`}>参加者と記事</h2>
-				<ol className="ac-days" aria-label="日付ごとの参加登録">
+				<ol className={styles.days} aria-label="日付ごとの参加登録">
 					{days.map((day) => {
 						const entry = sheet.entries.find((item) => item.day === day)
 						return (
@@ -155,12 +156,12 @@ export function AdventCalendar({
 									else rows.current.delete(day)
 								}}
 								tabIndex={-1}
-								className="ac-day"
+								className={styles.day}
 								data-filled={Boolean(entry)}
 								data-selected={selectedDay === day}
 								aria-current={today === day ? 'date' : undefined}
 							>
-								<div className="ac-date">
+								<div>
 									{entry ? (
 										<a href={getEntryHref(entry.uri)} aria-label={`12月${day}日の参加登録`}>
 											<CalendarDate year={year} day={day} />
@@ -169,34 +170,34 @@ export function AdventCalendar({
 										<CalendarDate year={year} day={day} />
 									)}
 								</div>
-								<div className="ac-entry">
+								<div className={styles.entry}>
 									{entry ? (
 										<>
-											<div className="ac-author">
+											<div className={styles.author}>
 												<UserAvatar entry={entry} />
 												{entry.authorHref ? <a href={entry.authorHref}>{entry.author}</a> : <span>{entry.author}</span>}
-												<span className="ac-entry-status">{statusLabels[entry.status]}</span>
+												<span className={styles.entryStatus}>{statusLabels[entry.status]}</span>
 											</div>
 											{entry.url ? (
-												<a className="ac-article" href={entry.url} target="_blank" rel="noreferrer">
+												<a className={styles.article} href={entry.url} target="_blank" rel="noreferrer">
 													{entry.title}
 													<span aria-hidden="true"> ↗</span>
 												</a>
 											) : (
-												<div className="ac-topic">{entry.title}</div>
+												<div>{entry.title}</div>
 											)}
-											{entry.comment && <p className="ac-comment">{entry.comment}</p>}
+											{entry.comment && <p className={styles.comment}>{entry.comment}</p>}
 										</>
 									) : (
-										<span className="ac-status">空き</span>
+										<span className={styles.status}>空き</span>
 									)}
 								</div>
 								{!readOnly && (
-									<div className="ac-day-actions">
+									<div className={styles.dayActions}>
 										{entry?.isOwner && onEditEntry && (
 											<button
 												type="button"
-												className="ac-text-button"
+												className={styles.textButton}
 												aria-label={`12月${day}日の自分の登録を編集`}
 												onClick={() => onEditEntry(entry)}
 											>
@@ -204,7 +205,7 @@ export function AdventCalendar({
 											</button>
 										)}
 										<a
-											className="ac-join"
+											className={styles.join}
 											href={getJoinHref(day)}
 											aria-label={`12月${day}日に参加登録`}
 											onClick={
@@ -263,21 +264,21 @@ function ProjectHeading({
 	onEdit,
 }: CalendarCollectionProps) {
 	return (
-		<header className="ac-collection-heading">
-			<div className="ac-heading-top">
-				<span className="ac-year">{year} / 12.01 — 12.25</span>
+		<header className={styles.collectionHeading}>
+			<div className={styles.headingTop}>
+				<span className={styles.year}>{year} / 12.01 — 12.25</span>
 				{onEdit && (
-					<button type="button" className="ac-button" onClick={onEdit}>
+					<button type="button" className={styles.button} onClick={onEdit}>
 						企画を編集
 					</button>
 				)}
 			</div>
 			<h1>{title}</h1>
-			<div className="ac-details">
+			<div className={styles.details}>
 				<p>{description}</p>
 				<span>主催 {organizerHref ? <a href={organizerHref}>{organizer}</a> : organizer}</span>
 			</div>
-			<div className="ac-toolbar">
+			<div className={styles.toolbar}>
 				<strong>{sheets.reduce((sum, sheet) => sum + sheet.entries.length, 0)} 件の参加登録</strong>
 				<span>
 					{sheets.length === 1 ? (
@@ -286,10 +287,10 @@ function ProjectHeading({
 						`${sheets.length} 枚のカレンダー`
 					)}
 				</span>
-				<div className="ac-project-actions">
+				<div className={styles.projectActions}>
 					{!readOnly && (
 						<a
-							className="ac-button ac-button-primary"
+							className={`${styles.button} ${styles.buttonPrimary}`}
 							href={getJoinHref()}
 							onClick={
 								onJoin
@@ -305,7 +306,7 @@ function ProjectHeading({
 						</a>
 					)}
 					<a
-						className="ac-button"
+						className={styles.button}
 						href={shareHref}
 						onClick={
 							onShare
@@ -336,7 +337,7 @@ export function CalendarCollection(props: CalendarCollectionProps) {
 	const id = useId()
 	const sheets = visibleSheets(props.sheets)
 	return (
-		<main className="ac-root">
+		<main className={styles.root}>
 			<ProjectHeading {...props} sheets={sheets} />
 			{sheets.length === 1 ? (
 				<AdventCalendar
@@ -350,11 +351,11 @@ export function CalendarCollection(props: CalendarCollectionProps) {
 					onEditEntry={props.onEditEntry}
 				/>
 			) : (
-				<div className="ac-card-grid">
+				<div className={styles.cardGrid}>
 					{sheets.map((sheet) => (
 						<a
 							key={sheet.id}
-							className="ac-card"
+							className={styles.card}
 							href={props.getCalendarHref(sheet.number)}
 							aria-labelledby={`${id}-${sheet.number}-heading ${id}-${sheet.number}-count`}
 							onClick={
@@ -367,11 +368,11 @@ export function CalendarCollection(props: CalendarCollectionProps) {
 									: undefined
 							}
 						>
-							<div className="ac-card-heading">
+							<div className={styles.cardHeading}>
 								<h2 id={`${id}-${sheet.number}-heading`}>{sheet.number}枚目</h2>
 								<span id={`${id}-${sheet.number}-count`}>{sheet.entries.length}/25人</span>
 							</div>
-							<ol className="ac-card-days" aria-label="日付ごとの参加状況">
+							<ol className={styles.cardDays} aria-label="日付ごとの参加状況">
 								{Array.from({ length: 25 }, (_, index) => {
 									const day = index + 1
 									const entry = sheet.entries.find((item) => item.day === day)
@@ -381,11 +382,11 @@ export function CalendarCollection(props: CalendarCollectionProps) {
 											{entry ? (
 												<UserAvatar entry={entry} />
 											) : (
-												<span className="ac-card-empty" aria-hidden="true">
+												<span className={styles.cardEmpty} aria-hidden="true">
 													—
 												</span>
 											)}
-											<span className="ac-visually-hidden">{entry ? entry.author : '空き'}</span>
+											<span className={styles.visuallyHidden}>{entry ? entry.author : '空き'}</span>
 										</li>
 									)
 								})}
@@ -406,13 +407,13 @@ export function CalendarDetail(props: CalendarDetailProps) {
 	const sheets = visibleSheets(props.sheets)
 	const current = sheets.find((sheet) => sheet.number === props.currentNumber)
 	return (
-		<main className="ac-root">
-			<a className="ac-back-link" href={props.projectHref}>
+		<main className={styles.root}>
+			<a className={styles.backLink} href={props.projectHref}>
 				企画トップに戻る
 			</a>
 			<ProjectHeading {...props} sheets={sheets} />
 			{sheets.length > 1 && (
-				<nav className="ac-sheet-navigation" aria-label="他のカレンダー">
+				<nav className={styles.sheetNavigation} aria-label="他のカレンダー">
 					{sheets.map((sheet) => (
 						<a
 							key={sheet.id}
@@ -435,7 +436,7 @@ export function CalendarDetail(props: CalendarDetailProps) {
 			)}
 			{current ? (
 				<>
-					<div className="ac-detail-heading">
+					<div className={styles.detailHeading}>
 						<h2>
 							{current.number}枚目 / 全{sheets.length}枚
 						</h2>
@@ -454,7 +455,7 @@ export function CalendarDetail(props: CalendarDetailProps) {
 					/>
 				</>
 			) : (
-				<section className="ac-empty">
+				<section className={styles.empty}>
 					<h2>このカレンダーはありません</h2>
 					<a href={props.projectHref}>企画トップに戻る</a>
 				</section>
@@ -486,20 +487,20 @@ export function ParticipationDetail({
 	onShare,
 }: ParticipationDetailProps) {
 	return (
-		<main className="ac-root ac-participation">
-			<a className="ac-back-link" href={projectHref}>
+		<main className={`${styles.root} ${styles.participation}`}>
+			<a className={styles.backLink} href={projectHref}>
 				企画トップに戻る
 			</a>
-			<header className="ac-collection-heading">
-				<span className="ac-year">{year}年</span>
+			<header className={styles.collectionHeading}>
+				<span className={styles.year}>{year}年</span>
 				<h1>
 					{projectTitle} · 12月{entry.day}日
 				</h1>
 			</header>
-			<div className="ac-author">
+			<div className={styles.author}>
 				<UserAvatar entry={entry} />
 				{entry.authorHref ? <a href={entry.authorHref}>{entry.author}</a> : <span>{entry.author}</span>}
-				<span className="ac-entry-status">{statusLabels[entry.status]}</span>
+				<span className={styles.entryStatus}>{statusLabels[entry.status]}</span>
 			</div>
 			<h2>
 				{entry.url ? (
@@ -512,20 +513,20 @@ export function ParticipationDetail({
 			</h2>
 			{entry.comment && <p>{entry.comment}</p>}
 			{placement ? (
-				<a className="ac-placement" href={placement.href}>
+				<a className={styles.placement} href={placement.href}>
 					現在のカレンダー：{placement.calendarNumber}枚目
 				</a>
 			) : (
-				<output className="ac-placement">カレンダーへの反映待ち</output>
+				<output className={styles.placement}>カレンダーへの反映待ち</output>
 			)}
-			<div className="ac-project-actions">
+			<div className={styles.projectActions}>
 				{entry.isOwner && onEditEntry && (
-					<button className="ac-button" type="button" onClick={() => onEditEntry(entry)}>
+					<button className={styles.button} type="button" onClick={() => onEditEntry(entry)}>
 						自分の登録を編集
 					</button>
 				)}
 				<a
-					className="ac-button"
+					className={styles.button}
 					href={shareHref}
 					onClick={
 						onShare

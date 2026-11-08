@@ -1,6 +1,4 @@
-@import "../theme.css";
-
-.calendar-directory {
+.root {
 	--directory-ink: var(--at-color-text);
 	--directory-main: var(--at-color-main);
 	--directory-accent: var(--at-color-accent);
@@ -17,12 +15,12 @@
 		sans-serif;
 	text-align: left;
 }
-.calendar-directory *,
-.calendar-directory *::before,
-.calendar-directory *::after {
+.root *,
+.root *::before,
+.root *::after {
 	box-sizing: border-box;
 }
-.calendar-directory h1 {
+.root h1 {
 	color: var(--directory-main);
 	margin: 0;
 	font-size: 28px;
@@ -30,31 +28,31 @@
 	font-weight: 650;
 	letter-spacing: -0.03em;
 }
-.calendar-directory h2 {
+.root h2 {
 	color: inherit;
 }
-.calendar-directory button,
-.calendar-directory input,
-.calendar-directory select {
+.root button,
+.root input,
+.root select {
 	font: inherit;
 	color: inherit;
 	border: 1px solid var(--directory-line);
 	border-radius: 0;
 	background: var(--at-color-base);
 }
-.calendar-directory button {
+.root button {
 	min-height: 38px;
 	padding: 7px 14px;
 	cursor: pointer;
 }
-.calendar-directory button:hover {
+.root button:hover {
 	background: var(--at-color-hover);
 }
-.calendar-directory :is(button, input, select, a):focus-visible {
+.root :is(button, input, select, a):focus-visible {
 	outline: 2px solid var(--directory-main);
 	outline-offset: 3px;
 }
-.directory-heading {
+.heading {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -62,84 +60,84 @@
 	padding-bottom: 22px;
 	border-bottom: 2px solid var(--directory-ink);
 }
-.calendar-directory .directory-primary {
+.root .primary {
 	color: var(--at-color-base);
 	background: var(--directory-accent);
 	border-color: var(--directory-accent);
 }
-.calendar-directory .directory-primary:hover {
+.root .primary:hover {
 	background: var(--at-color-main);
 	border-color: var(--at-color-main);
 }
-.directory-filters {
+.filters {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: end;
 	gap: 16px;
 	padding-block: 22px 16px;
 }
-.directory-filters label {
+.filters label {
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
 	font-weight: 600;
 }
-.directory-filters input[type="search"],
-.directory-filters select {
+.filters input[type="search"],
+.filters select {
 	height: 38px;
 	padding: 6px 10px;
 	font-weight: 400;
 	min-width: 96px;
 }
-.directory-search {
+.search {
 	flex: 1;
 	min-width: 180px;
 }
 
-.directory-result-count {
+.resultCount {
 	display: block;
 	margin: 0 0 12px;
 	font-variant-numeric: tabular-nums;
 }
-.directory-table-scroll {
+.tableScroll {
 	overflow-x: auto;
 }
-.directory-table {
+.table {
 	border-collapse: collapse;
 	width: 100%;
 	min-width: 520px;
 	color: inherit;
 	font: inherit;
 }
-.directory-table th,
-.directory-table td {
+.table th,
+.table td {
 	border-bottom: 1px solid var(--directory-line);
 	padding: 14px 12px;
 	text-align: left;
 	vertical-align: middle;
 }
-.directory-table thead th {
+.table thead th {
 	font-size: 12px;
 	font-weight: 600;
 	background: var(--at-color-surface);
 	border-top: 1px solid var(--directory-line);
 	white-space: nowrap;
 }
-.directory-table th:first-child {
+.table th:first-child {
 	padding-left: 12px;
 }
-.directory-table tbody th {
+.table tbody th {
 	font-size: 15px;
 	font-weight: 600;
 	width: 56%;
 }
-.directory-table tbody td {
+.table tbody td {
 	white-space: nowrap;
 }
-.directory-table .directory-numeric {
+.table .numeric {
 	font-variant-numeric: tabular-nums;
 }
-.calendar-directory .directory-title-button {
+.root .titleButton {
 	color: var(--directory-main);
 	border: 0;
 	min-height: 0;
@@ -147,12 +145,12 @@
 	text-align: left;
 	font: inherit;
 }
-.calendar-directory .directory-title-button:hover {
+.root .titleButton:hover {
 	background: transparent;
 	text-decoration: underline;
 	text-underline-offset: 3px;
 }
-.directory-empty {
+.empty {
 	display: grid;
 	justify-items: center;
 	gap: 16px;
@@ -160,21 +158,21 @@
 	margin: 0;
 	border-bottom: 1px solid var(--directory-line);
 }
-.directory-empty p {
+.empty p {
 	margin: 0;
 }
-.calendar-directory .directory-more {
+.root .more {
 	display: block;
 	margin: 22px auto 0;
 	min-width: 200px;
 }
-.directory-profile {
+.profile {
 	display: flex;
 	align-items: center;
 	gap: 14px;
 	flex-wrap: wrap;
 }
-.directory-avatar {
+.avatar {
 	border-radius: 50%;
 	overflow: hidden;
 	display: grid;
@@ -185,7 +183,7 @@
 	font-size: 20px;
 	font-weight: 600;
 }
-.directory-tabs {
+.tabs {
 	padding: 0;
 	margin: 0 0 20px;
 	border: 0;
@@ -195,38 +193,38 @@
 	border-bottom: 1px solid var(--directory-line);
 	margin-bottom: 20px;
 }
-.calendar-directory .directory-tabs button {
+.root .tabs button {
 	padding: 16px 0 12px;
 	border: 0;
 	border-bottom: 2px solid transparent;
 }
-.calendar-directory .directory-tabs button[aria-pressed="true"] {
+.root .tabs button[aria-pressed="true"] {
 	color: var(--directory-main);
 	border-bottom-color: var(--directory-main);
 	font-weight: 650;
 }
-.directory-articles {
+.articles {
 	list-style: none;
 	padding: 0;
 	margin: 0;
 }
-.directory-articles li {
+.articles li {
 	display: grid;
 	grid-template-columns: 100px minmax(0, 1fr) 180px;
 	gap: 20px;
 	padding: 16px 0;
 	border-bottom: 1px solid var(--directory-line);
 }
-.directory-articles a {
+.articles a {
 	color: var(--directory-main);
 	text-decoration: none;
 	font-weight: 600;
 	overflow-wrap: anywhere;
 }
-.directory-articles a:hover {
+.articles a:hover {
 	text-decoration: underline;
 }
-.directory-years {
+.years {
 	margin: 0;
 	border: 0;
 	padding: 22px 0;
@@ -236,16 +234,16 @@
 	gap: 8px;
 	padding-block: 22px;
 }
-.calendar-directory .directory-years button[aria-pressed="true"] {
+.root .years button[aria-pressed="true"] {
 	color: var(--at-color-base);
 	border-color: var(--directory-main);
 	background: var(--directory-main);
 }
-.directory-archive-year {
+.archiveYear {
 	font-size: 18px;
 	margin: 0 0 16px;
 }
-.directory-visually-hidden {
+.visuallyHidden {
 	position: absolute;
 	width: 1px;
 	height: 1px;
@@ -257,49 +255,49 @@
 	border: 0;
 }
 @media (max-width: 600px) {
-	.calendar-directory {
+	.root {
 		padding: 20px 16px;
 	}
-	.calendar-directory h1 {
+	.root h1 {
 		color: var(--directory-main);
 		font-size: 24px;
 	}
-	.directory-heading {
+	.heading {
 		flex-wrap: wrap;
 	}
-	.directory-filters {
+	.filters {
 		gap: 12px;
 	}
-	.directory-search {
+	.search {
 		min-width: 55%;
 	}
-	.directory-articles li {
+	.articles li {
 		grid-template-columns: auto minmax(0, 1fr);
 		gap: 6px 12px;
 	}
-	.directory-articles li a {
+	.articles li a {
 		grid-column: 1 / -1;
 		grid-row: 2;
 	}
-	.directory-articles li > span {
+	.articles li > span {
 		grid-column: 2;
 		grid-row: 1;
 		text-align: right;
 	}
-	.directory-profile {
+	.profile {
 		gap: 10px;
 	}
 }
 
 @media (max-width: 600px) {
-	.directory-table-scroll {
+	.tableScroll {
 		overflow: visible;
 	}
-	.directory-table {
+	.table {
 		display: block;
 		min-width: 0;
 	}
-	.directory-table thead {
+	.table thead {
 		position: absolute;
 		width: 1px;
 		height: 1px;
@@ -307,29 +305,29 @@
 		clip-path: inset(50%);
 		white-space: nowrap;
 	}
-	.directory-table tbody {
+	.table tbody {
 		display: block;
 	}
-	.directory-table tbody tr {
+	.table tbody tr {
 		display: grid;
 		grid-template-columns: auto minmax(0, 1fr) auto auto;
 		gap: 6px 12px;
 		padding: 14px 0;
 		border-bottom: 1px solid var(--directory-line);
 	}
-	.directory-table tbody th {
+	.table tbody th {
 		grid-column: 1 / -1;
 		width: auto;
 		padding: 0;
 		border: 0;
 	}
-	.directory-table tbody td {
+	.table tbody td {
 		min-width: 0;
 		padding: 0;
 		border: 0;
 		font-size: 13px;
 	}
-	.directory-table tbody td:nth-child(3) {
+	.table tbody td:nth-child(3) {
 		white-space: normal;
 		overflow-wrap: anywhere;
 	}

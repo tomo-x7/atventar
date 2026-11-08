@@ -1,7 +1,5 @@
-@import "../theme.css";
-
-.service-ui,
-.service-page {
+.root,
+.page {
 	font:
 		14px / 1.65 -apple-system,
 		BlinkMacSystemFont,
@@ -11,22 +9,22 @@
 	color: var(--at-color-text);
 	background: var(--at-color-base);
 }
-.service-ui * {
+.root * {
 	box-sizing: border-box;
 }
-.service-ui button,
-.service-page button {
+.root button,
+.page button {
 	font: inherit;
 	color: inherit;
 	cursor: pointer;
 	border-radius: 0;
 }
-.service-ui :focus-visible,
-.service-page :focus-visible {
+.root :focus-visible,
+.page :focus-visible {
 	outline: 2px solid var(--at-color-main);
 	outline-offset: 3px;
 }
-.service-header {
+.header {
 	display: flex;
 	align-items: center;
 	gap: 32px;
@@ -34,33 +32,33 @@
 	padding: 0 32px;
 	border-bottom: 1px solid var(--at-color-border);
 }
-.service-header button,
-.service-footer button {
+.header button,
+.footer button {
 	background: none;
 	border: none;
 	padding: 10px 0;
 }
-.service-header .service-brand {
+.header .brand {
 	color: var(--at-color-main);
 	font-size: 23px;
 	font-weight: 750;
 	letter-spacing: -0.06em;
 }
-.service-brand span {
+.brand span {
 	color: var(--at-color-accent);
 }
-.service-header nav {
+.header nav {
 	display: flex;
 	gap: 24px;
 }
-.service-header nav button[aria-current="page"] {
+.header nav button[aria-current="page"] {
 	box-shadow: inset 0 -2px var(--at-color-main);
 	color: var(--at-color-main);
 }
-.service-account {
+.account {
 	margin-left: auto;
 }
-.service-footer {
+.footer {
 	border-top: 1px solid var(--at-color-border);
 	margin: 32px 32px 0;
 	padding: 12px 0;
@@ -68,43 +66,43 @@
 	align-items: center;
 	justify-content: space-between;
 }
-.service-page {
+.page {
 	max-width: 900px;
 	margin: auto;
 	padding: 32px;
 }
-.service-page h1 {
+.page h1 {
 	margin: 0 0 24px;
 	font-size: 28px;
 	font-weight: 650;
 }
-.service-page details {
+.page details {
 	border-top: 1px solid var(--at-color-border);
 	padding: 16px 0;
 }
-.service-page details:last-child {
+.page details:last-child {
 	border-bottom: 1px solid var(--at-color-border);
 }
-.service-page summary {
+.page summary {
 	cursor: pointer;
 	font-weight: 600;
 }
-.service-page p {
+.page p {
 	margin: 12px 0 0;
 }
-.service-state {
+.state {
 	min-height: 350px;
 	display: flex;
 	flex-direction: column;
 	align-items: start;
 	justify-content: center;
 }
-.service-state button {
+.state button {
 	border: 1px solid var(--at-color-border);
 	padding: 8px 16px;
 	background: var(--at-color-base);
 }
-.service-skip {
+.skip {
 	position: absolute;
 	left: 16px;
 	top: -100px;
@@ -113,24 +111,24 @@
 	padding: 8px;
 	z-index: 2;
 }
-.service-skip:focus {
+.skip:focus {
 	top: 8px;
 }
 @media (max-width: 600px) {
-	.service-header {
+	.header {
 		padding: 8px 12px;
 		gap: 12px;
 		flex-wrap: wrap;
 	}
-	.service-header nav {
+	.header nav {
 		gap: 16px;
 		order: 3;
 		width: 100%;
 	}
-	.service-page {
+	.page {
 		padding: 24px 12px;
 	}
-	.service-footer {
+	.footer {
 		margin-inline: 12px;
 	}
 }

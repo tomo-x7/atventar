@@ -1,5 +1,6 @@
 import { useId } from 'react'
-import './calendar-forms.css'
+import '../theme.css'
+import styles from './CalendarForms.module.css'
 
 export interface AccountPanelProps {
 	onSignIn?: (provider: 'GitHub' | 'Google') => void
@@ -10,9 +11,9 @@ export interface AccountPanelProps {
 export function AccountPanel({ onSignIn, isSubmitting = false, error }: AccountPanelProps) {
 	const id = useId()
 	return (
-		<section className="calendar-form-ui" aria-labelledby={`${id}-heading`} aria-busy={isSubmitting}>
+		<section className={styles.root} aria-labelledby={`${id}-heading`} aria-busy={isSubmitting}>
 			<h1 id={`${id}-heading`}>ログイン</h1>
-			<div className="calendar-form-ui__providers">
+			<div className={styles.providers}>
 				<button type="button" disabled={isSubmitting} onClick={() => onSignIn?.('GitHub')}>
 					GitHub でログイン
 				</button>

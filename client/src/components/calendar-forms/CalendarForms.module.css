@@ -1,6 +1,4 @@
-@import "../theme.css";
-
-.calendar-form-ui {
+.root {
 	box-sizing: border-box;
 	width: min(680px, calc(100vw - 32px));
 	max-width: 100%;
@@ -16,13 +14,13 @@
 	text-align: left;
 }
 
-.calendar-form-ui *,
-.calendar-form-ui *::before,
-.calendar-form-ui *::after {
+.root *,
+.root *::before,
+.root *::after {
 	box-sizing: border-box;
 }
 
-.calendar-form-ui h1 {
+.root h1 {
 	color: var(--at-color-main);
 	margin: 0 0 28px;
 	font-size: 24px;
@@ -31,22 +29,22 @@
 	letter-spacing: 0;
 }
 
-.calendar-form-ui h2 {
+.root h2 {
 	margin: 0 0 16px;
 	font-size: 15px;
 	line-height: 1.6;
 	font-weight: 600;
 }
 
-.calendar-form-ui label {
+.root label {
 	display: block;
 	margin-bottom: 6px;
 	font-weight: 600;
 }
 
-.calendar-form-ui input,
-.calendar-form-ui textarea,
-.calendar-form-ui select {
+.root input,
+.root textarea,
+.root select {
 	display: block;
 	width: 100%;
 	margin: 0 0 20px;
@@ -58,11 +56,11 @@
 	font: inherit;
 }
 
-.calendar-form-ui textarea {
+.root textarea {
 	resize: vertical;
 }
 
-.calendar-form-ui button {
+.root button {
 	min-height: 40px;
 	padding: 8px 16px;
 	border: 1px solid var(--at-color-control-border);
@@ -74,55 +72,55 @@
 	cursor: pointer;
 }
 
-.calendar-form-ui button:hover {
+.root button:hover {
 	background: var(--at-color-hover);
 }
 
-.calendar-form-ui button:disabled {
+.root button:disabled {
 	opacity: 0.6;
 	cursor: wait;
 }
 
-.calendar-form-ui button.calendar-form-ui__primary {
+.root button.primary {
 	border-color: var(--at-color-accent);
 	background: var(--at-color-accent);
 	color: var(--at-color-base);
 }
 
-.calendar-form-ui button.calendar-form-ui__primary:hover {
+.root button.primary:hover {
 	background: var(--at-color-main);
 	border-color: var(--at-color-main);
 }
 
-.calendar-form-ui :focus-visible {
+.root :focus-visible {
 	outline: 2px solid var(--at-color-main);
 	outline-offset: 3px;
 }
 
-.calendar-form-ui__actions {
+.actions {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px;
 }
 
-.calendar-form-ui__providers {
+.providers {
 	display: grid;
 	gap: 12px;
 	max-width: 360px;
 }
 
-.calendar-form-ui__danger-zone {
+.dangerZone {
 	margin-top: 32px;
 	padding-top: 24px;
 	border-top: 1px solid var(--at-color-border);
 }
 
-.calendar-form-ui__details {
+.details {
 	margin: 0 0 28px;
 	border-top: 1px solid var(--at-color-border);
 }
 
-.calendar-form-ui__details > div {
+.details > div {
 	display: grid;
 	grid-template-columns: 100px minmax(0, 1fr);
 	gap: 12px;
@@ -130,33 +128,33 @@
 	border-bottom: 1px solid var(--at-color-border);
 }
 
-.calendar-form-ui__details dt {
+.details dt {
 	font-weight: 600;
 }
 
-.calendar-form-ui__details dd {
+.details dd {
 	margin: 0;
 	overflow-wrap: anywhere;
 }
 
-.calendar-form-ui output {
+.root output {
 	display: block;
 	margin: 16px 0 0;
 	color: var(--at-color-text);
 }
 
 @media (max-width: 480px) {
-	.calendar-form-ui {
+	.root {
 		padding: 20px 16px;
 	}
 }
 
-.calendar-form-ui__completion-actions {
+.completionActions {
 	margin-top: 24px;
 	align-items: center;
 }
 
-.calendar-form-ui a {
+.root a {
 	color: var(--at-color-text);
 	text-underline-offset: 3px;
 }

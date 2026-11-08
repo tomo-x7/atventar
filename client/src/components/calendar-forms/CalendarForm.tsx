@@ -1,5 +1,6 @@
 import { useId, useState } from 'react'
-import './calendar-forms.css'
+import '../theme.css'
+import styles from './CalendarForms.module.css'
 
 export interface CalendarFormValue {
 	title: string
@@ -26,7 +27,7 @@ export function CalendarForm(props: CalendarFormProps) {
 	const id = useId()
 	const [saved, setSaved] = useState(false)
 	return (
-		<section className="calendar-form-ui" aria-labelledby={`${id}-heading`}>
+		<section className={styles.root} aria-labelledby={`${id}-heading`}>
 			<h1 id={`${id}-heading`}>
 				{year}年のカレンダーを{mode === 'create' ? '作成' : '編集'}
 			</h1>
@@ -64,8 +65,8 @@ export function CalendarForm(props: CalendarFormProps) {
 					maxLength={3000}
 					defaultValue={initialValue?.description ?? ''}
 				/>
-				<div className="calendar-form-ui__actions">
-					<button className="calendar-form-ui__primary" type="submit" disabled={isSubmitting}>
+				<div className={styles.actions}>
+					<button className={styles.primary} type="submit" disabled={isSubmitting}>
 						{isSubmitting ? '保存中…' : mode === 'create' ? '作成する' : '保存する'}
 					</button>
 					{onCancel && (
