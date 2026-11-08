@@ -26,6 +26,7 @@ export function AccountPanel({ onSignIn, onAtPassport, isSubmitting = false, err
 					if (!isSubmitting) onSignIn(String(new FormData(event.currentTarget).get('handle')).trim().replace(/^@/, ''))
 				}}
 			>
+				<h2>Bluesky・Atmosphereでログイン</h2>
 				<label htmlFor={`${id}-handle`}>ハンドル</label>
 				<input
 					id={`${id}-handle`}
